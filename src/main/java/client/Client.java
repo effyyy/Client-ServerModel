@@ -1,9 +1,13 @@
 package client;
 
+import common.Books;
+import common.SQLite;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,10 +30,12 @@ public class Client extends Frame {
     private TextField textFieldUsername;
     private TextField textFieldEmail;
     private Button buttonSend;
-
+    private Button sqlExecute;
+    private Label timeLabel;
     private PrintWriter printWriter;
     private BufferedReader bufferedReader;
     private Socket socket;
+    private TextField sqlcommandIN;
 
     /**
      * Constructor will just initialise the AWT Frame and GUI.
@@ -49,9 +55,10 @@ public class Client extends Frame {
         textFieldUsername = new TextField(20);
         textFieldEmail = new TextField(20);
         buttonSend = new Button("Send to Server");
-
-        this.setLayout(new GridLayout(4, 2));
-
+        timeLabel = new Label("Time here");
+        sqlExecute = new Button("SQLite Command Run");
+        sqlcommandIN = new TextField(20);
+        this.setLayout(new GridLayout(5, 2));
         this.add(buttonConnect);
         this.add(labelStatus);
         this.add(new Label("Username to send to server:"));
@@ -59,6 +66,9 @@ public class Client extends Frame {
         this.add(new Label("Email address reply from server:"));
         this.add(textFieldEmail);
         this.add(buttonSend);
+        this.add(timeLabel);
+        this.add(sqlExecute);
+        this.add(sqlcommandIN);
         this.setSize(700, 300);
         this.setVisible(true);
         this.setAlwaysOnTop(true);
@@ -86,6 +96,17 @@ public class Client extends Frame {
                 sendToServer();
             }
 
+        });
+        sqlExecute.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String sqliteCommand = sqlcommandIN.getText();
+                SQLite app = new SQLite(sqliteCommand);
+                List<Books> trackList = app.executeSQLCommand();
+                for (Books t : trackList) {
+                    System.out.println(t);
+                }
+            }
         });
     }
 

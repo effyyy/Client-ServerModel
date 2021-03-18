@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 public class ConnectionFactory {
 
-    public static final String DB_URL = "jdbc:sqlite:C:\\Users\\Umair\\IdeaProjects\\chinook\\chinook.db";
+    public static final String DB_URL = "jdbc:sqlite:C:\\Users\\Umair\\IdeaProjects\\CW-STARTING-POINT-master\\LibraryBooks\\library.sqlite";
     public static final String DB_USERNAME = "";
     public static final String DB_PASSWORD = "";
 

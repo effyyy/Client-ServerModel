@@ -17,23 +17,14 @@ import java.util.logging.Logger;
  */
 public class SQLite {
 
+    private String commandSQL;
+
+    public SQLite(String commandSQL){
+        this.commandSQL = commandSQL;
+    }
+
     public static void main(String[] args) {
-        SQLite app = new SQLite();
-        List<Track> trackList = app.read10();
-        System.out.println("before: ");
-        for (Track t : trackList) {
-            System.out.println(t);
-        }
 
-        //app.deleteRecord();
-        //app.insertRecord("my_composer_name");
-
-
-        List<Track> trackList2 = app.read10();
-        System.out.println("after: ");
-        for (Track t : trackList2) {
-            System.out.println(t);
-        }
     }
 
     /**
@@ -41,22 +32,21 @@ public class SQLite {
      *
      * @return the first 10 tracks in the tracks table
      */
-    public synchronized List<Track> read10() {
-        ArrayList<Track> tracks = new ArrayList<>();
-        String selectSQL = "SELECT * FROM tracks WHERE composer='AC/DC'"; // lets just get the first 10 records for testing
+    public synchronized List<Books> executeSQLCommand() {
+        ArrayList<Books> booksArrayList = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
-             PreparedStatement prep = conn.prepareStatement(selectSQL)) {
+             PreparedStatement prep = conn.prepareStatement(commandSQL)) {
 
             ResultSet resultSet = prep.executeQuery();
 
             while (resultSet.next()) {
-                tracks.add(Track.newTrackFromResultSet(resultSet));
+                booksArrayList.add(Books.newBookFromResultSet(resultSet));
             }
         } catch (SQLException ex) {
             Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return tracks;
+        return booksArrayList;
     }
 
     /**
@@ -78,14 +68,14 @@ public class SQLite {
     /**
      * Add a single track
      */
-    public synchronized void insertRecord(Track track) {
+    public synchronized void insertRecord(Books track) {
         String insertSQL = "INSERT INTO tracks (Name, AlbumId, MediaTypeId, GenreId, Composer, Milliseconds, Bytes, UnitPrice) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?) WHERE TrackId = ?";
 
         try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
              PreparedStatement prep = conn.prepareStatement(insertSQL)) {
 
-            prep.setString(1,track.getName());
+            prep.setString(1,track.getTitle());
 //            prep.setInt(2,millisecs);
 //            prep.setInt(3,bytes);
 //            prep.setFloat(4,price);
