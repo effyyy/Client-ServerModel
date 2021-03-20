@@ -48,43 +48,26 @@ public class SQLite {
         }
         return booksArrayList;
     }
+    public synchronized List<OnLoan> executeSQLCommandP(){
+        ArrayList<OnLoan> booksArrayList = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
+             PreparedStatement prep = conn.prepareStatement(commandSQL)) {
+
+            ResultSet resultSet = prep.executeQuery();
+
+            while (resultSet.next()) {
+                booksArrayList.add(OnLoan.newLoanFromResultSet(resultSet));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return booksArrayList;
+    }
 
     /**
      * Delete a single track
      */
-    public synchronized void deleteRecord() {
-        String deleteSQL = "DELETE FROM tracks WHERE Composer='AC/DC'";
 
-        try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
-             PreparedStatement prep = conn.prepareStatement(deleteSQL)) {
-
-            prep.execute();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Add a single track
-     */
-    public synchronized void insertRecord(Books track) {
-        String insertSQL = "INSERT INTO tracks (Name, AlbumId, MediaTypeId, GenreId, Composer, Milliseconds, Bytes, UnitPrice) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) WHERE TrackId = ?";
-
-        try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
-             PreparedStatement prep = conn.prepareStatement(insertSQL)) {
-
-            prep.setString(1,track.getTitle());
-//            prep.setInt(2,millisecs);
-//            prep.setInt(3,bytes);
-//            prep.setFloat(4,price);
-//            prep.setInt();
-            prep.execute();
-            // okay recard added - update GUI
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
 }

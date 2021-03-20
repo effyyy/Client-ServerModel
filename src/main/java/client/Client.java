@@ -1,5 +1,7 @@
 package client;
 
+import common.OnLoan;
+import common.Person;
 import common.Books;
 import common.SQLite;
 
@@ -102,8 +104,8 @@ public class Client extends Frame {
             public void actionPerformed(ActionEvent e) {
                 String sqliteCommand = sqlcommandIN.getText();
                 SQLite app = new SQLite(sqliteCommand);
-                List<Books> trackList = app.executeSQLCommand();
-                for (Books t : trackList) {
+                List<OnLoan> trackList = app.executeSQLCommandP();
+                for (OnLoan t : trackList) {
                     System.out.println(t);
                 }
             }
