@@ -65,9 +65,5 @@ public class SQLite {
         return booksArrayList;
     }
 
-    /**
-     * Delete a single track
-     */
-
 
 }

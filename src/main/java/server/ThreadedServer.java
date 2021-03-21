@@ -23,26 +23,7 @@ public class ThreadedServer {
      * Constructor will just initialise the HashMap lookup table on the Server.
      */
     public ThreadedServer() {
-        initHashMap();
     }
-
-    /**
-     * Let's just hard-code a simple HashMap<Keys, Values> to act as a lookup
-     * table for the data to send.
-     */
-    private void initHashMap() {
-        hashMapNames = new HashMap();
-        hashMapNames.put("Fred Smith", "F.Smith@cov.ac.uk");
-        hashMapNames.put("Joe Bloggs", "J.Bloggs@cov.ac.uk");
-        hashMapNames.put("Pat Lunch", "P.Lunch@cov.ac.uk");
-        hashMapNames.put("Cherie Bakewell", "C.Bakewell@cov.ac.uk");
-        hashMapNames.put("Jamie Dodger", "@J.Dodgercov.ac.uk");
-        hashMapNames.put("Victoria Sponge", "V.Sponge@cov.ac.uk");
-        hashMapNames.put("Marsha Mallow", "M.Mallow@cov.ac.uk");
-
-        System.out.println("Server: HashMap done.");
-    }
-
     /**
      * Wait until a client connects to the server on a port, then establish the
      * connection via a socket object and create a thread to handle requests.
