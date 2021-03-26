@@ -60,10 +60,10 @@ public class Person implements Serializable {
 
     public String toString(){
         return "Person{"+
-                "person_id = " + person_id+
-                "First Name = " + first_name+
-                "Last Name = " + last_name+
-                "Library Card = "+ library_card+"}";
+                " person_id = " + person_id+
+                " First Name = " + first_name+
+                " Last Name = " + last_name+
+                " Library Card = "+ library_card+"}";
     }
 
 

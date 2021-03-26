@@ -111,7 +111,7 @@ public class OnLoan {
                " loan end = " + loan_end+
                " returned date =" + returned_date+
                " returned status = "+ return_status+
-               "}";
+               "}\n";
     }
 
 }

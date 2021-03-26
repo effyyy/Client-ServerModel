@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @author Chris Bass
  * 08/04/2016
  */
-public class Client extends Frame {
+public class Client {
 
     private int clientNumber = 0;
     private final Object waitObject = new Object();
@@ -33,6 +33,19 @@ public class Client extends Frame {
         super();
     }
 
+
+
+    public void sendToServer(String toSend, JLabel displayLabel) {
+        if (printWriter != null && bufferedReader != null) {
+
+            // send data to server
+            clientSays("Sending " + toSend + " to server.",displayLabel);
+            printWriter.println(toSend);
+
+        } else {
+            clientSays("You must connect to the server first!!" , displayLabel);
+        }
+    }
     /**
      * Close the connection to server.
      */
@@ -55,25 +68,6 @@ public class Client extends Frame {
             }
         }
     }
-
-    /**
-     * Send username to server.
-     */
-    public void sendToServer(JTextField textFieldUsername , JLabel displayLabel) {
-        if (printWriter != null && bufferedReader != null) {
-
-            // 1. read data from textfield
-            String toSend = textFieldUsername.getText();
-
-            // 2. send data to server
-            clientSays("Sending " + toSend + " to server." , displayLabel);
-            printWriter.println(toSend);
-
-        } else {
-            clientSays("You must connect to the server first!!" , displayLabel);
-        }
-    }
-
     /**
      * Setup connection to the server on the loop back address and the same port
      * number as the Server is expecting.

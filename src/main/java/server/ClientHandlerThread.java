@@ -32,6 +32,8 @@ public class ClientHandlerThread implements Runnable {
     private static int connectionCount = 0;
     private final int connectionNumber;
 
+    ThreadedServer test = new ThreadedServer();
+
     /**
      * Constructor just initialises the connection to client.
      *
@@ -70,7 +72,11 @@ public class ClientHandlerThread implements Runnable {
 
                 if (lineRead.startsWith("BROADCAST")) {
                     ThreadedServer.broadcastToClients();
-                } else {
+                }
+                if(lineRead.startsWith("SQLExecute")){
+                    test.selectTable(lineRead);
+                }
+                else {
                     String emailLookup = hashMapNames.getOrDefault(lineRead, "User not known");
                     printWriter.println(emailLookup);
                 }

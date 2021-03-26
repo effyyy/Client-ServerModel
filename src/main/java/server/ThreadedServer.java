@@ -1,5 +1,9 @@
 package server;
 
+import common.Books;
+import common.Person;
+import common.OnLoan;
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
@@ -18,6 +22,7 @@ public class ThreadedServer {
 
     private HashMap<String, String> hashMapNames;
     private static final HashSet<ClientHandlerThread> CLIENT_HANDLER_THREADS = new HashSet<>();
+    SQLite sql = new SQLite();
 
     /**
      * Constructor will just initialise the HashMap lookup table on the Server.
@@ -62,6 +67,33 @@ public class ThreadedServer {
         for (ClientHandlerThread handler : CLIENT_HANDLER_THREADS) {
             handler.sendBroadcast();
         }
+    }
+
+    public void selectTable(String tableSelect) {
+        if (tableSelect == null) {
+            System.out.println("Null input");
+        } else {
+            System.out.println("Received String is.... " + tableSelect);
+            if (tableSelect.equals("SQLExecute : 1")) {
+                List<Books> books = sql.executeSQLCommandBooks();
+                for (Books o : books) {
+                    System.out.println(o);
+                }
+            }
+            if (tableSelect.equals("SQLExecute : 2")) {
+                List<Person> person = sql.executeSQLCommandPerson();
+                for (Person o : person) {
+                    System.out.println(o);
+                }
+            }
+            if (tableSelect.equals("SQLExecute : 3")) {
+                List<OnLoan> onloan = sql.executeSQLCommandOnLoan();
+                for (OnLoan o : onloan) {
+                    System.out.println(o);
+                }
+            }
+        }
+
     }
 
     public static void main(String[] args) {

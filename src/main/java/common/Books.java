@@ -9,7 +9,6 @@ import java.sql.SQLException;
  * @author Chris Bass
  */
 public class Books implements Serializable {
-
     private int book_id; // primary key
     private String title;
     private String authors; // foriegn key
