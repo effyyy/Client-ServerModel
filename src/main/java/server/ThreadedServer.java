@@ -69,29 +69,25 @@ public class ThreadedServer {
         }
     }
 
-    public void selectTable(String tableSelect) {
+    public List<? extends Object> selectTable(String tableSelect) {
         if (tableSelect == null) {
             System.out.println("Null input");
+            return null;
         } else {
             System.out.println("Received String is.... " + tableSelect);
             if (tableSelect.equals("SQLExecute : 1")) {
                 List<Books> books = sql.executeSQLCommandBooks();
-                for (Books o : books) {
-                    System.out.println(o);
-                }
+                return books;
             }
             if (tableSelect.equals("SQLExecute : 2")) {
                 List<Person> person = sql.executeSQLCommandPerson();
-                for (Person o : person) {
-                    System.out.println(o);
-                }
+                return person;
             }
             if (tableSelect.equals("SQLExecute : 3")) {
                 List<OnLoan> onloan = sql.executeSQLCommandOnLoan();
-                for (OnLoan o : onloan) {
-                    System.out.println(o);
-                }
+                return onloan;
             }
+            return null;
         }
 
     }

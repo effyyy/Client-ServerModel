@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,7 +75,8 @@ public class ClientHandlerThread implements Runnable {
                     ThreadedServer.broadcastToClients();
                 }
                 if(lineRead.startsWith("SQLExecute")){
-                    test.selectTable(lineRead);
+                    List<? extends  Object> testObject = test.selectTable(lineRead);
+                    System.out.println(testObject);
                 }
                 else {
                     String emailLookup = hashMapNames.getOrDefault(lineRead, "User not known");
