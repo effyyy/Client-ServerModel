@@ -1,9 +1,10 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import common.Command;
+import common.Database;
+import common.Message;
+
+import java.io.*;
 import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,14 +23,9 @@ import java.util.logging.Logger;
  * @author Chris Bass
  * 08/04/2016
  */
-public class ClientHandlerThread implements Runnable {
+public class ClientHandlerThread implements Runnable{
 
     private final Socket socket;
-    private final HashMap<String, String> hashMapNames;
-
-    private final PrintWriter printWriter;
-    private final BufferedReader bufferedReader;
-
     private static int connectionCount = 0;
     private final int connectionNumber;
 
@@ -39,20 +35,13 @@ public class ClientHandlerThread implements Runnable {
      * Constructor just initialises the connection to client.
      *
      * @param socket       the socket to establish the connection to client.
-     * @param hashMapNames a reference to the lookup table for getting email.
      * @throws IOException if an I/O error occurs when creating the input and
      *                     output streams, or if the socket is closed, or socket is not connected.
      */
-    public ClientHandlerThread(Socket socket, HashMap hashMapNames) throws IOException {
+    public ClientHandlerThread(Socket socket) throws IOException {
         this.socket = socket;
-        this.hashMapNames = hashMapNames;
-
-        printWriter = new PrintWriter(socket.getOutputStream(), true);
-        bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
         connectionCount++;
         connectionNumber = connectionCount;
-        printWriter.println("You are client number" + connectionNumber);
         threadSays("Connection " + connectionNumber + " established.");
     }
 
@@ -64,41 +53,27 @@ public class ClientHandlerThread implements Runnable {
      */
     @Override
     public void run() {
-        try {
-            // Read and process names until an exception is thrown.
-            threadSays("Waiting for data from client...");
-            String lineRead;
-            while ((lineRead = bufferedReader.readLine()) != null) {
-                threadSays("Read data from client: \"" + lineRead + "\".");
-
-                if (lineRead.startsWith("BROADCAST")) {
+        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())) {
+            Message messageRead;
+            List<?> testObject = null;
+            while ((messageRead = (Message) objectInputStream.readObject()) != null) {
+                System.out.println("Object Read is :" + messageRead);
+                if (messageRead.getCommand() == Command.UPDATE) {
                     ThreadedServer.broadcastToClients();
                 }
-                if(lineRead.startsWith("SQLExecute")){
-                    List<? extends  Object> testObject = test.selectTable(lineRead);
-                    System.out.println(testObject);
-                }
-                else {
-                    String emailLookup = hashMapNames.getOrDefault(lineRead, "User not known");
-                    printWriter.println(emailLookup);
+                if (messageRead.getCommand() == Command.SELECT) {
+                    testObject = test.selectTable(messageRead);
+                    objectOutputStream.writeObject(testObject);
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(ClientHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                threadSays("We have lost connection to client " + connectionNumber + ".");
-                ThreadedServer.removeThread(this);
-                socket.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ClientHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        }catch(IOException | ClassNotFoundException ex){
+            threadSays("Exception : " + ex);
         }
     }
 
-    public void sendBroadcast() {
+ public void sendBroadcast() {
         threadSays("Broadcasting to client " + connectionNumber + ".");
-        printWriter.println("SERVERBROADCAST: " + new Date().toString());
     }
 
     /**

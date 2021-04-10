@@ -1,8 +1,6 @@
 package server;
 
-import common.Books;
-import common.Person;
-import common.OnLoan;
+import common.*;
 
 import java.io.*;
 import java.util.*;
@@ -18,9 +16,8 @@ import java.util.logging.Logger;
  * @author Chris Bass
  * 08/04/2016
  */
-public class ThreadedServer {
+public class ThreadedServer{
 
-    private HashMap<String, String> hashMapNames;
     private static final HashSet<ClientHandlerThread> CLIENT_HANDLER_THREADS = new HashSet<>();
     SQLite sql = new SQLite();
 
@@ -37,24 +34,22 @@ public class ThreadedServer {
         System.out.println("Server: Server starting.");
 
         try (ServerSocket serverSocket = new ServerSocket(2000)) {
+            int connectionCount = 0;
 
             while (true) {
                 System.out.println("Server: Waiting for connecting client...");
+                try (Socket socket = serverSocket.accept()) {
+                    connectionCount++;
+                    System.out.println("Server: Connection " + connectionCount + " established.");
+                    ClientHandlerThread clientHandlerThread = new ClientHandlerThread(socket);
+                    clientHandlerThread.run();
 
-                try {
-                    Socket socket = serverSocket.accept();
-
-                    ClientHandlerThread clientHandlerThread = new ClientHandlerThread(socket, hashMapNames);
-                    Thread connectionThread = new Thread(clientHandlerThread);
-                    connectionThread.start();
-                    CLIENT_HANDLER_THREADS.add(clientHandlerThread);
                 } catch (IOException ex) {
-                    System.out.println("Server: Could not start connection to a client.");
+                    System.out.println("Server: We have lost connection to client " + connectionCount + ".");
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(ThreadedServer.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Server: Closed down");
+        }catch(IOException ex){
+            System.out.println("IO Exception : " + ex);
         }
     }
 
@@ -69,21 +64,20 @@ public class ThreadedServer {
         }
     }
 
-    public List<? extends Object> selectTable(String tableSelect) {
-        if (tableSelect == null) {
+    public List<? extends Object> selectTable(Message message) {
+        if (message.getCommand() == null) {
             System.out.println("Null input");
             return null;
         } else {
-            System.out.println("Received String is.... " + tableSelect);
-            if (tableSelect.equals("SQLExecute : 1")) {
+            if (message.getDatabase() == Database.BOOKS) {
                 List<Books> books = sql.executeSQLCommandBooks();
                 return books;
             }
-            if (tableSelect.equals("SQLExecute : 2")) {
+            if (message.getDatabase() == Database.PERSONS) {
                 List<Person> person = sql.executeSQLCommandPerson();
                 return person;
             }
-            if (tableSelect.equals("SQLExecute : 3")) {
+            if (message.getDatabase()==Database.ON_LOAN) {
                 List<OnLoan> onloan = sql.executeSQLCommandOnLoan();
                 return onloan;
             }

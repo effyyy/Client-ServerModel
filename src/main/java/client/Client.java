@@ -1,9 +1,18 @@
 package client;
 
+import common.Books;
+import common.Database;
+import common.Message;
+import common.Person;
+
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
+import java.util.Objects;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,12 +28,10 @@ import java.util.logging.Logger;
  */
 public class Client {
 
-    private int clientNumber = 0;
     private final Object waitObject = new Object();
-    private PrintWriter printWriter;
-    private BufferedReader bufferedReader;
     private Socket socket;
-
+    public Message toSend;
+    public ArrayList<Person>toPlot;
 
     /**
      * Constructor will just initialise the AWT Frame and GUI.
@@ -33,25 +40,12 @@ public class Client {
         super();
     }
 
-
-
-    public void sendToServer(String toSend, JLabel displayLabel) {
-        if (printWriter != null && bufferedReader != null) {
-
-            // send data to server
-            clientSays("Sending " + toSend + " to server.",displayLabel);
-            printWriter.println(toSend);
-
-        } else {
-            clientSays("You must connect to the server first!!" , displayLabel);
-        }
-    }
     /**
      * Close the connection to server.
      */
-    public void closeConnection(JLabel displayLabel) {
+    public void closeConnection() {
         if (socket != null) {
-            clientSays("Closing connection" , displayLabel);
+            clientSays("Closing connection");
             try {
                 socket.close();
             } catch (IOException ex) {
@@ -72,18 +66,15 @@ public class Client {
      * Setup connection to the server on the loop back address and the same port
      * number as the Server is expecting.
      */
-    public void reconnectToServer(JLabel displayLabel) {
-        closeConnection(displayLabel);
-        clientSays("Attempting connection to server" , displayLabel);
+    public void reconnectToServer() {
+        closeConnection();
+        clientSays("Attempting connection to server");
         try {
             socket = new Socket("127.0.0.1", 2000);
-
-            printWriter = new PrintWriter(socket.getOutputStream(), true);
-            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            clientSays("Connected to server" , displayLabel);
+            clientSays("Connected to server");
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            clientSays(ex.toString() , displayLabel); // connection failed
+            clientSays(ex.toString()); // connection failed
         }
 
         // notify that the connection is back
@@ -95,38 +86,32 @@ public class Client {
     /**
      * Keep reading for messages from the server and updating the GUI.
      */
-    public void keepReadingFromServer(JTextField textFieldEmail, JLabel displayLabel) {
-        int count = 0;
-        while (true) {
-            count++;
-
-            // if we have lost connection then just pause this loop until we
-            // receive notification to start running again.
-            if (socket == null) {
-                clientSays("Waiting for connection to be reset..." , displayLabel);
-                synchronized (waitObject) {
-                    try {
-                        waitObject.wait();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-
-            clientSays("Waiting for message" + count + " from server..." , displayLabel);
-            String reply = null;
+    public void ReadFromServer() {
+            //If the socket is not null or we are done waiting we will now read from the server,
+            clientSays("Waiting for message from server...");
             try {
-                reply = bufferedReader.readLine();
-                clientSays("Received \"" + reply + "\" from server." , displayLabel);
+                List<?> replyObject;
+                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+                replyObject=(List<?>) objectInputStream.readObject();
+                toPlot = objectListCreator(replyObject,toSend.getDatabase());
             } catch (IOException ex) {
-                clientSays("IOException " + ex , displayLabel);
+                clientSays("IOException " + ex);
+            }catch (ClassNotFoundException ex){
+                clientSays("ClassNotFound");
             }
-
-            if (reply != null && reply.startsWith("You are client number")) {
-                clientNumber = Integer.parseInt(reply.substring(21));
-            } else {
-                textFieldEmail.setText(reply);
+    }
+        //End of method
+    public void sendToServer(Message toSend) {
+        this.toSend = toSend;
+        try {
+            if (this.socket!=null) {
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                // send data to server
+                    clientSays("Sending " + toSend + " to server.");
+                    objectOutputStream.writeObject(toSend);
             }
+        } catch (IOException ex) {
+            clientSays("IOException : " + ex);
         }
     }
 
@@ -135,18 +120,24 @@ public class Client {
      *
      * @param say the String to write to standard output stream.
      */
-    public void clientSays(String say , JLabel displayLabel) {
+    public void clientSays(String say) {
+        int clientNumber = 0;
         System.out.println("Client" + clientNumber + ": " + say);
-        displayLabel.setText("Status: " + say);
+    }
+
+    public ArrayList<Person> objectListCreator(List<?>inputList , Database database){
+        if(database==Database.PERSONS){
+            ArrayList<Person> personArrayList = (ArrayList<Person>) inputList;
+            clientSays("Creating ArrayList");
+            return personArrayList;
+        }else{
+            clientSays("Invalid Databse");
+            return null;
+        }
     }
 
     public static void main(String[] args) {
-        Client simpleClient = new Client();
         ClientGUI gui = new ClientGUI();
-        JLabel displayLabel = gui.labelStatus;
-        JTextField textFieldEmail = gui.textFieldEmail;
-        simpleClient.reconnectToServer(displayLabel);
-        simpleClient.keepReadingFromServer(textFieldEmail,displayLabel);
     }
 
 }
