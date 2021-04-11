@@ -38,12 +38,14 @@ public class ThreadedServer{
 
             while (true) {
                 System.out.println("Server: Waiting for connecting client...");
-                try (Socket socket = serverSocket.accept()) {
+                try {
+                    Socket socket = serverSocket.accept();
                     connectionCount++;
                     System.out.println("Server: Connection " + connectionCount + " established.");
                     ClientHandlerThread clientHandlerThread = new ClientHandlerThread(socket);
-                    clientHandlerThread.run();
-
+                    Thread connectionThread = new Thread(clientHandlerThread);
+                    connectionThread.start();
+                    CLIENT_HANDLER_THREADS.add(clientHandlerThread);
                 } catch (IOException ex) {
                     System.out.println("Server: We have lost connection to client " + connectionCount + ".");
                 }
@@ -64,22 +66,20 @@ public class ThreadedServer{
         }
     }
 
-    public List<? extends Object> selectTable(Message message) {
+    public List<? extends Object> getData(Message message) {
         if (message.getCommand() == null) {
             System.out.println("Null input");
             return null;
         } else {
             if (message.getDatabase() == Database.BOOKS) {
-                List<Books> books = sql.executeSQLCommandBooks();
-                return books;
+                System.out.println("called");
+                return sql.executeSQLCommandBooks();
             }
             if (message.getDatabase() == Database.PERSONS) {
-                List<Person> person = sql.executeSQLCommandPerson();
-                return person;
+                return sql.executeSQLCommandPerson();
             }
             if (message.getDatabase()==Database.ON_LOAN) {
-                List<OnLoan> onloan = sql.executeSQLCommandOnLoan();
-                return onloan;
+                return sql.executeSQLCommandOnLoan();
             }
             return null;
         }

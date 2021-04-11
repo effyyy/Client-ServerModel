@@ -8,18 +8,21 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class ClientGUI extends JFrame {
-    private JButton sqlExecute;
+    private JButton SelectTable;
     private JButton connectButton;
     public  JLabel displayLabel;
     private JPanel guiPanel;
     private JTable sqlTable;
     private JButton createTable;
     private JScrollPane scroller;
+    private JList databaseSelect;
+    private JList crudSelect;
+    private JButton confirmSelect;
     Client client = new Client();
 
     ClientGUI() {
         this.setContentPane(guiPanel);
-        this.setSize(1280, 786);
+        this.setSize(300, 300);
         this.setVisible(true);
         this.setAlwaysOnTop(true);
         this.setTitle("Library Book Manager");
@@ -34,21 +37,35 @@ public class ClientGUI extends JFrame {
 
         connectButton.addActionListener(evt -> client.reconnectToServer());
 
-        sqlExecute.addActionListener(evt -> {
-             //String  input = JOptionPane.showInputDialog("Please Select Table Number : \n 1: Books \n 2:Person Record \n 3: Loan Status");
-             Message toSend = new Message(Command.SELECT, Database.PERSONS);
-             client.sendToServer(toSend);
-        });
-
-        createTable.addActionListener(evt -> {
+        confirmSelect.addActionListener(evt -> {
+            int selectedIndex = databaseSelect.getSelectedIndex();
+            Database database = getDatabase(selectedIndex);
+            Message toSend = new Message(Command.SELECT, database);
+            client.sendToServer(toSend);
             client.ReadFromServer();
             plotGraph(client.toPlot,(client.toSend).getDatabase());
         });
     }
 
-    public void plotGraph (ArrayList<Person> arrayList, Database database){
-        TableModelPerson genericModel = new TableModelPerson(arrayList);
+    public void plotGraph (ArrayList<?> arrayList, Database database){
+        GenericTableModel genericModel = new GenericTableModel(arrayList, database);
         sqlTable.setModel(genericModel);
+    }
+
+    private Database getDatabase(int input) {
+        if (input == 0) {
+            return Database.BOOKS;
+        }
+        if (input == 1) {
+            return Database.PERSONS;
+        }
+        if (input == 2) {
+            return Database.ON_LOAN;
+        }
+        else{
+            setDisplayLabel("Please Select an input");
+            return null;
+        }
     }
 
     public void setDisplayLabel(String say){

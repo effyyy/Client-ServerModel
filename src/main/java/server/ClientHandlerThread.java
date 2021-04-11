@@ -1,13 +1,10 @@
 package server;
 
 import common.Command;
-import common.Database;
 import common.Message;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +26,7 @@ public class ClientHandlerThread implements Runnable{
     private static int connectionCount = 0;
     private final int connectionNumber;
 
-    ThreadedServer test = new ThreadedServer();
+    ThreadedServer threadedServer = new ThreadedServer();
 
     /**
      * Constructor just initialises the connection to client.
@@ -56,19 +53,27 @@ public class ClientHandlerThread implements Runnable{
         try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())) {
             Message messageRead;
-            List<?> testObject = null;
+            List<?> objectList;
             while ((messageRead = (Message) objectInputStream.readObject()) != null) {
                 System.out.println("Object Read is :" + messageRead);
                 if (messageRead.getCommand() == Command.UPDATE) {
                     ThreadedServer.broadcastToClients();
                 }
                 if (messageRead.getCommand() == Command.SELECT) {
-                    testObject = test.selectTable(messageRead);
-                    objectOutputStream.writeObject(testObject);
+                    objectList = threadedServer.getData(messageRead);
+                    objectOutputStream.writeObject(objectList);
                 }
             }
         }catch(IOException | ClassNotFoundException ex){
             threadSays("Exception : " + ex);
+        }finally {
+            try {
+                threadSays("We have lost connection to client " + connectionNumber + ".");
+                ThreadedServer.removeThread(this);
+                socket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ClientHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

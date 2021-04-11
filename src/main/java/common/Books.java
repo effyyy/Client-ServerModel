@@ -132,19 +132,17 @@ public class Books implements Serializable {
 
     @Override
     public String toString() {
-        return "Books{" +
-                "book_id=" + book_id +
-                ", ntitle='" + title + '\'' +
-                ", author=" + authors +
-                ", average_rating=" + average_rating +
-                ", isbn=" + isbn +
-                ", isbn13='" + isbn13 + '\'' +
-                ", language_code=" + language_code +
-                ", num_pages=" + num_pages +
-                ", ratings_count=" + ratings_count +
-                ", text_ratings_count=" + text_ratings_count+
-                ", quantity=" + quantity+
-                '}';
+        return book_id +
+                "," + title +
+                "," + authors +
+                "," + average_rating +
+                "," + isbn +
+                "," + isbn13 +
+                "," + language_code +
+                "," + num_pages +
+                "," + ratings_count +
+                "," + text_ratings_count+
+                ", " + quantity;
     }
 
 }

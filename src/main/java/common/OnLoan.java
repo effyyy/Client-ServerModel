@@ -1,9 +1,10 @@
 package common;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OnLoan {
+public class OnLoan implements Serializable {
 
     private int loan_id;
     private int person_id;
@@ -102,16 +103,14 @@ public class OnLoan {
     }
 
     public String toString(){
-       return "On Loan {"+
-               "loan id = "+ loan_id+
-               " book id = " + book_id+
-               " person id = "+person_id+
-               " loan period = "+ loan_period+
-               " loan start = " + loan_start+
-               " loan end = " + loan_end+
-               " returned date =" + returned_date+
-               " returned status = "+ return_status+
-               "}\n";
+       return loan_id+
+               "," + book_id+
+               ","+person_id+
+               ","+ loan_period+
+               "," + loan_start+
+               "," + loan_end+
+               "," + returned_date+
+               ","+ return_status;
     }
 
 }

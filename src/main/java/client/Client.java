@@ -31,7 +31,7 @@ public class Client {
     private final Object waitObject = new Object();
     private Socket socket;
     public Message toSend;
-    public ArrayList<Person>toPlot;
+    public ArrayList<?>toPlot;
 
     /**
      * Constructor will just initialise the AWT Frame and GUI.
@@ -90,10 +90,10 @@ public class Client {
             //If the socket is not null or we are done waiting we will now read from the server,
             clientSays("Waiting for message from server...");
             try {
-                List<?> replyObject;
+                ArrayList<?> replyObject;
                 ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                replyObject=(List<?>) objectInputStream.readObject();
-                toPlot = objectListCreator(replyObject,toSend.getDatabase());
+                replyObject=(ArrayList<?>) objectInputStream.readObject();
+                    toPlot = replyObject;
             } catch (IOException ex) {
                 clientSays("IOException " + ex);
             }catch (ClassNotFoundException ex){
@@ -125,16 +125,6 @@ public class Client {
         System.out.println("Client" + clientNumber + ": " + say);
     }
 
-    public ArrayList<Person> objectListCreator(List<?>inputList , Database database){
-        if(database==Database.PERSONS){
-            ArrayList<Person> personArrayList = (ArrayList<Person>) inputList;
-            clientSays("Creating ArrayList");
-            return personArrayList;
-        }else{
-            clientSays("Invalid Databse");
-            return null;
-        }
-    }
 
     public static void main(String[] args) {
         ClientGUI gui = new ClientGUI();
