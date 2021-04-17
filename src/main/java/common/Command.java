@@ -1,8 +1,9 @@
 package common;
 
 public enum Command {
-    SELECT,
-    ADD,
+    SELECT_ALL,
+    SELECT_WHERE,
+    INSERT_INTO,
     DELETE,
     UPDATE
 }

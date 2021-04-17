@@ -2,6 +2,6 @@ package common;
 
 public enum Database {
     BOOKS,
-    PERSONS,
+    PERSON,
     ON_LOAN
 }

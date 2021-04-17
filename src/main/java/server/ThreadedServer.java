@@ -5,8 +5,7 @@ import common.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * A threaded server can handle multiple client's requests at the same time via
@@ -66,24 +65,40 @@ public class ThreadedServer{
         }
     }
 
-    public List<? extends Object> getData(Message message) {
+    public ArrayList<?> getData(Message message) {
+
+        String sqlStatement;
+
         if (message.getCommand() == null) {
             System.out.println("Null input");
-            return null;
         } else {
-            if (message.getDatabase() == Database.BOOKS) {
-                System.out.println("called");
-                return sql.executeSQLCommandBooks();
+                sqlStatement = getSQLStatement(message);
+            System.out.println(sqlStatement);
+
+                if (message.getDatabase() == Database.BOOKS) {
+                    return sql.executeSQLCommandBooks(sqlStatement);
+                }
+                if (message.getDatabase() == Database.PERSON) {
+                    return sql.executeSQLCommandPerson(sqlStatement);
+                }
+                if (message.getDatabase() == Database.ON_LOAN) {
+                    return sql.executeSQLCommandOnLoan(sqlStatement);
+                }
             }
-            if (message.getDatabase() == Database.PERSONS) {
-                return sql.executeSQLCommandPerson();
-            }
-            if (message.getDatabase()==Database.ON_LOAN) {
-                return sql.executeSQLCommandOnLoan();
-            }
+        return null;
+
+    }
+
+    public String getSQLStatement(Message message){
+        if(message.getCommand() == Command.SELECT_ALL){
+            return "SELECT * FROM "+ message.getDatabase();
+        }
+        if(message.getCommand()==Command.SELECT_WHERE){
+            return "SELECT * FROM "+ message.getDatabase() + " WHERE "+ message.getArgument();
+        }
+        else{
             return null;
         }
-
     }
 
     public static void main(String[] args) {

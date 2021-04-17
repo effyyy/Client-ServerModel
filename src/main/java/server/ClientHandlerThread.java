@@ -5,6 +5,7 @@ import common.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,30 +51,37 @@ public class ClientHandlerThread implements Runnable{
      */
     @Override
     public void run() {
-        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())) {
+
+        try (
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())
+        ){
+
             Message messageRead;
-            List<?> objectList;
+
+            ArrayList<?> objectList;
+
             while ((messageRead = (Message) objectInputStream.readObject()) != null) {
-                System.out.println("Object Read is :" + messageRead);
-                if (messageRead.getCommand() == Command.UPDATE) {
-                    ThreadedServer.broadcastToClients();
-                }
-                if (messageRead.getCommand() == Command.SELECT) {
+                    System.out.println("Object Read is :" + messageRead);
                     objectList = threadedServer.getData(messageRead);
+                    System.out.println(objectList);
                     objectOutputStream.writeObject(objectList);
-                }
             }
+
         }catch(IOException | ClassNotFoundException ex){
             threadSays("Exception : " + ex);
+
         }finally {
+
             try {
                 threadSays("We have lost connection to client " + connectionNumber + ".");
                 ThreadedServer.removeThread(this);
                 socket.close();
+
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandlerThread.class.getName()).log(Level.SEVERE, null, ex);
             }
+
         }
     }
 

@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * This class represents a single row of data in the database table.
  * @author Chris Bass
  */
-public class Books implements Serializable {
+public class Publication implements Serializable {
     private int book_id; // primary key
     private String title;
     private String authors; // foriegn key
@@ -21,7 +21,7 @@ public class Books implements Serializable {
     private double text_ratings_count;
     private int quantity;
 
-    public Books(int book_id, String title, String authors, double average_rating, long isbn, long isbn13, String language_code, int num_pages, double ratings_count,double text_ratings_count,int quantity) {
+    public Publication(int book_id, String title, String authors, double average_rating, long isbn, long isbn13, String language_code, int num_pages, double ratings_count, double text_ratings_count, int quantity) {
         this.book_id = book_id;
         this.title = title;
         this.authors = authors;
@@ -35,8 +35,8 @@ public class Books implements Serializable {
         this.quantity = quantity;
     }
 
-    public static Books newBookFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Books(
+    public static Publication newBookFromResultSet(ResultSet resultSet) throws SQLException {
+        return new Publication(
                 resultSet.getInt(1),
                 resultSet.getString(2),
                 resultSet.getString(3),

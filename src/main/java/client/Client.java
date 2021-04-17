@@ -1,18 +1,10 @@
 package client;
 
-import common.Books;
-import common.Database;
 import common.Message;
-import common.Person;
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.awt.*;
 import java.io.*;
 import java.net.*;
-import java.util.Objects;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,28 +79,28 @@ public class Client {
      * Keep reading for messages from the server and updating the GUI.
      */
     public void ReadFromServer() {
-            //If the socket is not null or we are done waiting we will now read from the server,
-            clientSays("Waiting for message from server...");
-            try {
-                ArrayList<?> replyObject;
-                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-                replyObject=(ArrayList<?>) objectInputStream.readObject();
-                    toPlot = replyObject;
-            } catch (IOException ex) {
-                clientSays("IOException " + ex);
-            }catch (ClassNotFoundException ex){
-                clientSays("ClassNotFound");
-            }
+        //If the socket is not null or we are done waiting we will now read from the server,
+        clientSays("Waiting for message from server...");
+        try {
+            ArrayList<?> replyObject;
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            replyObject=(ArrayList<?>) objectInputStream.readObject();
+            toPlot = replyObject;
+        } catch (IOException ex) {
+            clientSays("IOException " + ex);
+        }catch (ClassNotFoundException ex){
+            clientSays("ClassNotFound");
+        }
     }
-        //End of method
+    //End of method
     public void sendToServer(Message toSend) {
         this.toSend = toSend;
         try {
             if (this.socket!=null) {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
                 // send data to server
-                    clientSays("Sending " + toSend + " to server.");
-                    objectOutputStream.writeObject(toSend);
+                clientSays("Sending " + toSend + " to server.");
+                objectOutputStream.writeObject(toSend);
             }
         } catch (IOException ex) {
             clientSays("IOException : " + ex);

@@ -1,10 +1,10 @@
 package common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
 
-public class ArraylistHandler {
+public class ArraylistHandler implements Serializable {
 
 
     private ArrayList<?>arrayList;
@@ -12,9 +12,19 @@ public class ArraylistHandler {
     private Database database;
 
     //Column Names for all databases
-    String[] columnNameBooks = {"Book ID","Title","Authors","Average Rating","ISBN","ISBN 13","Language Code","Num Pages","Rating Count","Quantity"};
-    String[] columnNamePersons = {"First Name", "Last Name", " Person ID" , "Library Card"};
-    String[] columnNameOnLoan ={"Loan ID", "Person ID","Book ID", "Loan Period","Loan Start","Loan End","Returned Date","Return Status"};
+
+    private final String[] columnNameBooks = {"book_id"
+            ,"title","authors","average_rating","isbn","isbn13","language_code","num_pages","ratings_count",
+            "text_ratings_count", "quantity"};
+
+
+    private final String[] columnNamePersons = {"person_id","first_name","last_name","library_card"};
+
+
+    private final String[] columnNameOnLoan ={"loan_id","book_id","+person_id","loan_period","loan_start",
+            "loan_end","returned_date","return_status"};
+
+
 
     public ArraylistHandler(Database database, ArrayList<?> arrayList){
         this.arrayList = arrayList;
@@ -24,13 +34,13 @@ public class ArraylistHandler {
     /**
      * Returns the column names for the specified database. Takes a count as a parameter for the column number.
      * @param count used to specify what column we need.
-     * @return
+     * @return Returns a String
      */
-    public String getColumnNames(int count){
+    public String getColumnName(int count){
         if(database == Database.BOOKS){
             return columnNameBooks[count];
         }
-        if(database== Database.PERSONS){
+        if(database== Database.PERSON){
 
             return columnNamePersons[count];
         }
@@ -42,11 +52,29 @@ public class ArraylistHandler {
             return null;
         }
     }
+
+    public String[] getColumnArray(){
+        if(database == Database.BOOKS){
+            return columnNameBooks;
+        }
+        if(database== Database.PERSON){
+
+            return columnNamePersons;
+        }
+        if(database == Database.ON_LOAN){
+
+            return columnNameOnLoan;
+        }
+        else{
+            return null;
+        }
+    }
+
     public int getColumnLength(){
         if(database==Database.BOOKS){
             return columnNameBooks.length;
         }
-        if(database==Database.PERSONS){
+        if(database==Database.PERSON){
             return columnNamePersons.length;
         }
         if(database==Database.ON_LOAN){
@@ -76,13 +104,6 @@ public class ArraylistHandler {
     }
 
 
-    public ArrayList<?> getArrayList() {
-        return arrayList;
-    }
-
-    public void setArrayList(ArrayList<?> arrayList) {
-        this.arrayList = arrayList;
-    }
     public int getArraySize(){
         return arrayList.size();
     }

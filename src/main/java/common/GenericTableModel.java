@@ -7,34 +7,32 @@ import java.util.ArrayList;
 public class GenericTableModel extends AbstractTableModel {
     Database database;
     ArrayList<?> arrayList;
+    ArraylistHandler arraylistHandler;
     public GenericTableModel(ArrayList<?> arrayList, Database database){
         this.database = database;
         this.arrayList = arrayList;
+        this.arraylistHandler = new ArraylistHandler(database, arrayList);
     }
 
 
     @Override
     public int getRowCount() {
-        ArraylistHandler arraylistHandler = new ArraylistHandler(database, arrayList);
         return arraylistHandler.getArraySize();
     }
 
     @Override
     public int getColumnCount() {
-        ArraylistHandler arraylistHandler = new ArraylistHandler(database, arrayList);
         return arraylistHandler.getColumnLength();
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ArraylistHandler arraylistHandler = new ArraylistHandler(database, arrayList);
        return arraylistHandler.getValueAt(rowIndex,columnIndex);
     }
 
     @Override
     public String getColumnName(int column) {
-        ArraylistHandler arraylistHandler = new ArraylistHandler(database, arrayList);
-        return arraylistHandler.getColumnNames(column);
+        return arraylistHandler.getColumnName(column);
     }
 
     @Override
@@ -47,6 +45,4 @@ public class GenericTableModel extends AbstractTableModel {
         return true;
     }
 
-    public void addToTable(Object aValue){
-    }
 }
