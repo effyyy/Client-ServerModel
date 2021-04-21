@@ -76,13 +76,13 @@ public class ThreadedServer{
             System.out.println(sqlStatement);
 
                 if (message.getDatabase() == Database.BOOKS) {
-                    return sql.executeSQLCommandBooks(sqlStatement);
+                    return sql.executeSQLCommandBooks(sqlStatement,message);
                 }
                 if (message.getDatabase() == Database.PERSON) {
-                    return sql.executeSQLCommandPerson(sqlStatement);
+                    return sql.executeSQLCommandPerson(sqlStatement,message);
                 }
                 if (message.getDatabase() == Database.ON_LOAN) {
-                    return sql.executeSQLCommandOnLoan(sqlStatement);
+                    return sql.executeSQLCommandOnLoan(sqlStatement,message);
                 }
             }
         return null;
@@ -96,9 +96,26 @@ public class ThreadedServer{
         if(message.getCommand()==Command.SELECT_WHERE){
             return "SELECT * FROM "+ message.getDatabase() + " WHERE "+ message.getArgument();
         }
+        if(message.getCommand() == Command.INSERT_INTO){
+            if(message.getDatabase() == Database.PERSON) {
+                return "INSERT INTO " + message.getDatabase() + "(first_name,last_name,library_card) VALUES (?,?,?)";
+            }
+            if(message.getDatabase()== Database.BOOKS){
+                return "INSERT INTO "+ message.getDatabase()+"(title,authors,average_rating,isbn,isbn13,language_code," +
+                        "[#num_pages],ratings_count,text_reviews_count,quantity) VALUES (?,?,?,?,?,?,?,?,?,?)";
+            }
+            if(message.getDatabase()==Database.ON_LOAN){
+                return "INSERT INTO "+message.getDatabase()+"(person_id,book_id,loan_period,loan_start,loan_end," +
+                        "returned_date,return_status) VALUES (?,?,?,?,?,?,?)";
+            }
+            else{
+                return null;
+            }
+        }
         else{
             return null;
         }
+
     }
 
     public static void main(String[] args) {

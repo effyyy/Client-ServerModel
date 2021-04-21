@@ -27,6 +27,7 @@ public class ClientHandlerThread implements Runnable{
     private static int connectionCount = 0;
     private final int connectionNumber;
 
+
     ThreadedServer threadedServer = new ThreadedServer();
 
     /**
@@ -52,20 +53,22 @@ public class ClientHandlerThread implements Runnable{
     @Override
     public void run() {
 
-        try (
+        try
+        {
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())
-        ){
 
             Message messageRead;
 
             ArrayList<?> objectList;
 
-            while ((messageRead = (Message) objectInputStream.readObject()) != null) {
+            while ((messageRead = (Message)objectInputStream.readObject())!=null) {
                     System.out.println("Object Read is :" + messageRead);
                     objectList = threadedServer.getData(messageRead);
-                    System.out.println(objectList);
+                for (Object o: objectList) {
                     objectOutputStream.writeObject(objectList);
+                }
+
             }
 
         }catch(IOException | ClassNotFoundException ex){

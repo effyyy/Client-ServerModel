@@ -1,4 +1,6 @@
-package common;
+package client;
+
+import common.Database;
 
 import java.io.Serializable;
 import java.util.ArrayList;

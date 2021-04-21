@@ -3,31 +3,60 @@ package client;
 import common.*;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class ClientGUI extends JFrame {
-    private JButton SelectTable;
+
     private JButton connectButton;
+
     public  JLabel displayLabel;
+
     private JPanel guiPanel;
+
     private JTable sqlTable;
-    private JButton createTable;
+
     private JScrollPane scroller;
+
     private JList databaseSelect;
+
     private JList selectFunctionality;
+
     private JButton confirmSelect;
-    private JButton updateTable;
+
+    private JButton updateTableButton;
+
+    private JButton printTableButton;
+
+    private JButton clearTableButton;
+
+    private JButton plotTableButton;
+
+    private JButton sendToServerButton;
+
     private Message toSend;
+
     public static String argument;
+
+    private Database database;
+
+    private Command command;
+
+    private ArrayList<?> toPlot;
+
+    private static String testString;
+
+
 
     Client client = new Client();
 
     ClientGUI() {
         this.setContentPane(guiPanel);
 
-        this.setSize(1280,800);
+        this.setSize(1440,600);
 
         this.setVisible(true);
 
@@ -35,55 +64,76 @@ public class ClientGUI extends JFrame {
 
         this.setTitle("Library Book Manager");
 
+
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
 
                 super.windowClosing(e); //To change body of generated methods, choose Tools | Templates.
 
-                client.closeConnection();
+                setDisplayLabel(client.closeConnection());
 
                 System.exit(0);
 
             }
         });
 
+        displayLabel.setText(testString);
 
-        connectButton.addActionListener(evt -> client.reconnectToServer());
+
+        connectButton.addActionListener(evt ->
+                setDisplayLabel(client.reconnectToServer()));
 
 
 
         confirmSelect.addActionListener(evt -> {
 
             //Selecting Database from JLIST
-            Database database = getDatabase(databaseSelect.getSelectedIndex());
+            database = getDatabase(databaseSelect.getSelectedIndex());
 
             //Selecting Command from JLIST
-            Command command = getCommand(selectFunctionality.getSelectedIndex(),database);
+            command = getCommand(selectFunctionality.getSelectedIndex(),database);
 
-            //Sending the selected Message object to the Server
-            toSend = new Message(command, database,argument);
-            client.sendToServer(toSend);
+            getArgument();
 
-            //Reading the reply from the server and then using it to plot a graph on the GUi
-            client.ReadFromServer();
-            plotGraph(client.toPlot,database);
+            setDisplayLabel("You have selected the Database :"+database+", Command :" + command +" Argument:"+ argument);
+
+            //Check if we are clear for sending the selected Message object to the Server
 
         });
 
 
-        updateTable.addActionListener(e -> {
+        updateTableButton.addActionListener(e -> {
 
-            connectButton.doClick();
+        });
 
-            confirmSelect.doClick();
+        plotTableButton.addActionListener(new ActionListener() {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                setDisplayLabel(client.readFromServer());
+
+                toPlot = client.toPlot;
+
+                plotGraph();
+            }
+        });
+        sendToServerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toSend = new Message(command, database, argument);
+                setDisplayLabel(client.sendToServer(toSend));
+                ClientGUI.argument = null;
+            }
         });
     }
 
-    public void plotGraph (ArrayList<?> arrayList, Database database){
-        GenericTableModel genericTableModel = new GenericTableModel(arrayList, database);
-        sqlTable.setModel(genericTableModel);
+    public void plotGraph(){
+            if (toPlot != null && database != null) {
+                GenericTableModel genericTableModel = new GenericTableModel(toPlot, database);
+                sqlTable.setModel(genericTableModel);
+            }
     }
 
     public void plotEmptyGraph(Database database){
@@ -113,9 +163,10 @@ public class ClientGUI extends JFrame {
             return Command.SELECT_ALL;
         }
         if(input == 1){
-            SelectWhereDialog selectWhereDialog = new SelectWhereDialog(database);
             return Command.SELECT_WHERE;
-
+        }
+        if(input == 2){
+            return Command.INSERT_INTO;
         }
         if(input == 3){
             return Command.UPDATE;
@@ -128,16 +179,28 @@ public class ClientGUI extends JFrame {
         }
     }
 
-    public void setDisplayLabel(String say){
+    public void getArgument(){
+        if(command == Command.SELECT_WHERE) {
+            SelectWhereDialog selectWhereDialog = new SelectWhereDialog(database);
+        }
+        if(command == Command.INSERT_INTO){
+            if(database == Database.PERSON) {
+                InsertIntoPersons insertIntoPersons = new InsertIntoPersons();
+            }
+            if(database == Database.BOOKS){
+                InsertIntoBooks insertIntoBooks = new InsertIntoBooks();
+            }
+            if(database==Database.ON_LOAN){
+                InsertIntoOnloan insertIntoOnloan = new InsertIntoOnloan();
+            }
 
-        displayLabel.setText("Status : "+ say);
+
+        }
     }
 
-    public String[] getColumnNames(Database database){
-            ArraylistHandler arraylistHandler = new ArraylistHandler(database, null);
-            return arraylistHandler.getColumnArray();
+    public void setDisplayLabel(String say) {
+       displayLabel.setText(say);
     }
-
 
 
     public static void main(String[] args){

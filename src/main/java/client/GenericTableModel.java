@@ -1,4 +1,6 @@
-package common;
+package client;
+
+import common.Database;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

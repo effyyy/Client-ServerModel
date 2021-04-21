@@ -1,6 +1,5 @@
 package client;
 
-import common.ArraylistHandler;
 import common.Database;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ public class SelectWhereDialog extends JDialog {
     private JComboBox operationDropDown;
     private JTextField textField1;
     private JLabel labelMessage;
-    private String whereClause;
+    public static String whereClause;
 
 
 
@@ -69,7 +68,7 @@ public class SelectWhereDialog extends JDialog {
         // add your code here
         String inputColumn = (String) columnDropDown.getSelectedItem();
         String inputOperation = (String) operationDropDown.getSelectedItem();
-        String toReturn =inputColumn+" "+inputOperation+" "+textField1.getText();
+        String toReturn =inputColumn+" "+inputOperation+"  '"+textField1.getText()+"'";
         dispose();
         return toReturn;
     }
@@ -84,7 +83,7 @@ public class SelectWhereDialog extends JDialog {
     }
 
     public void setWhereClause(String whereClause) {
-        this.whereClause = whereClause;
+        SelectWhereDialog.whereClause = whereClause;
     }
 
     public static void main(String[] args) {

@@ -18,7 +18,7 @@ public class Publication implements Serializable {
     private String language_code;
     private int num_pages;
     private double ratings_count;
-    private double text_ratings_count;
+    private double text_reviews_count;
     private int quantity;
 
     public Publication(int book_id, String title, String authors, double average_rating, long isbn, long isbn13, String language_code, int num_pages, double ratings_count, double text_ratings_count, int quantity) {
@@ -31,7 +31,7 @@ public class Publication implements Serializable {
         this.language_code = language_code;
         this.num_pages = num_pages;
         this.ratings_count = ratings_count;
-        this.text_ratings_count= text_ratings_count;
+        this.text_reviews_count = text_ratings_count;
         this.quantity = quantity;
     }
 
@@ -122,9 +122,9 @@ public class Publication implements Serializable {
         this.ratings_count = ratings_count;
     }
 
-    public double getText_ratings_count(){return text_ratings_count;}
+    public double getText_reviews_count(){return text_reviews_count;}
 
-    public void setText_ratings_count(double text_ratings_count) { this.text_ratings_count = text_ratings_count; }
+    public void setText_reviews_count(double text_reviews_count) { this.text_reviews_count = text_reviews_count; }
 
     public int getQuantity(){return quantity;}
 
@@ -141,7 +141,7 @@ public class Publication implements Serializable {
                 "," + language_code +
                 "," + num_pages +
                 "," + ratings_count +
-                "," + text_ratings_count+
+                "," + text_reviews_count +
                 ", " + quantity;
     }
 
