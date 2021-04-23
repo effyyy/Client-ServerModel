@@ -41,7 +41,7 @@ public class ClientGUI extends JFrame {
 
     public static String argument;
 
-    private Database database;
+    public Database database;
 
     private Command command;
 
@@ -112,11 +112,19 @@ public class ClientGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                if(command == Command.INSERT_INTO || command == Command.DELETE){
+
+                    Message message =  new Message(Command.SELECT_ALL,database,null);
+
+                    client.sendToServer(message);
+
+                }
                 setDisplayLabel(client.readFromServer());
 
                 toPlot = client.toPlot;
 
                 plotGraph();
+
             }
         });
         sendToServerButton.addActionListener(new ActionListener() {
@@ -193,8 +201,9 @@ public class ClientGUI extends JFrame {
             if(database==Database.ON_LOAN){
                 InsertIntoOnloan insertIntoOnloan = new InsertIntoOnloan();
             }
-
-
+        }
+        if(command == Command.DELETE){
+            DeleteDialog deleteDialog = new DeleteDialog(database);
         }
     }
 

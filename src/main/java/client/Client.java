@@ -87,10 +87,12 @@ public class Client {
     public String readFromServer() {
 
             clientSays("Waiting for message from server...");
-            try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream())){
+            try {
+                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 ArrayList<?> replyObject;
                 replyObject = (ArrayList<?>) objectInputStream.readObject();
                 toPlot = replyObject;
+                objectInputStream.reset();
             } catch (IOException | ClassNotFoundException ex) {
                 clientSays("IOException " + ex);
             }
@@ -100,12 +102,13 @@ public class Client {
     //End of method
     public String sendToServer(Message toSend) {
         this.toSend = toSend;
-        try {
+        try{
             if (this.socket!=null) {
-                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
                 // send data to server
                 clientSays("Sending " + toSend + " to server.");
                 objectOutputStream.writeObject(toSend);
+                objectOutputStream.reset();
             }
         } catch (IOException ex) {
             clientSays("IOException : " + ex);

@@ -4,6 +4,7 @@ import common.Command;
 import common.Message;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,6 @@ public class ClientHandlerThread implements Runnable{
      */
     @Override
     public void run() {
-
         try
         {
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -63,8 +63,8 @@ public class ClientHandlerThread implements Runnable{
             ArrayList<?> objectList;
 
             while ((messageRead = (Message)objectInputStream.readObject())!=null) {
-                    System.out.println("Object Read is :" + messageRead);
-                    objectList = threadedServer.getData(messageRead);
+                System.out.println("Object Read is :" + messageRead);
+                objectList = threadedServer.getData(messageRead);
                 for (Object o: objectList) {
                     objectOutputStream.writeObject(objectList);
                 }
@@ -86,6 +86,7 @@ public class ClientHandlerThread implements Runnable{
             }
 
         }
+
     }
 
  public void sendBroadcast() {

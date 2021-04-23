@@ -112,6 +112,10 @@ public class ThreadedServer{
                 return null;
             }
         }
+
+        if(message.getCommand() == Command.DELETE){
+            return "DELETE FROM "+ message.getDatabase() + " " + message.getArgument();
+        }
         else{
             return null;
         }

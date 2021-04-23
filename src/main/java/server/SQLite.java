@@ -54,7 +54,19 @@ public class SQLite {
             return publicationArrayList;
 
 
-        } else {
+        }
+        if(message.getCommand() == Command.DELETE){
+            try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
+                 PreparedStatement prep = conn.prepareStatement(sqlCommand)) {
+                int x = prep.executeUpdate();
+                System.out.println(x + " Records Updated");
+            } catch (SQLException ex) {
+                Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return publicationArrayList;
+        }
+        else
+            {
 
             try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
                  PreparedStatement prep = conn.prepareStatement(sqlCommand)) {
@@ -99,7 +111,18 @@ public class SQLite {
             return onLoanArrayList;
 
 
-        } else {
+        }
+        if(message.getCommand() == Command.DELETE){
+            try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
+                 PreparedStatement prep = conn.prepareStatement(sqlCommand)) {
+                int x = prep.executeUpdate();
+                System.out.println(x + " Records Updated");
+            } catch (SQLException ex) {
+                Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return onLoanArrayList;
+        }
+        else {
 
             try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
                  PreparedStatement prep = conn.prepareStatement(sqlCommand)) {
@@ -138,7 +161,19 @@ public class SQLite {
             return personArrayList;
 
 
-        } else {
+        }
+        if(message.getCommand() == Command.DELETE){
+            try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
+                 PreparedStatement prep = conn.prepareStatement(sqlCommand)) {
+                int x = prep.executeUpdate();
+                System.out.println(x + " Records Updated");
+            } catch (SQLException ex) {
+                Logger.getLogger(SQLite.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return personArrayList;
+        }
+        else
+            {
             try (Connection conn = ConnectionFactory.getConnection(); // auto close the connection object after try
                  PreparedStatement prep = conn.prepareStatement(sqlCommand)) {
 
