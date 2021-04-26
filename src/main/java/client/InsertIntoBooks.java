@@ -1,7 +1,9 @@
 package client;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class InsertIntoBooks extends JDialog {
     private JPanel contentPane;
@@ -26,18 +28,9 @@ public class InsertIntoBooks extends JDialog {
         setAlwaysOnTop(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        buttonOK.addActionListener(e -> ClientGUI.argument = onOK());
 
-                ClientGUI.argument = onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+        buttonCancel.addActionListener(e -> onCancel());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -48,25 +41,8 @@ public class InsertIntoBooks extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-    private String onOK() {
-        // add your code here
-        String toReturn = textField1.getText()+","+ textField2.getText()+","+
-                textField3.getText()+","+ textField4.getText()+","+ textField5.getText()+","+ textField6.getText()+","+
-                textField7.getText()+","+textField8.getText()+","+ textField9.getText()+","+textField10.getText();
-        dispose();
-        return toReturn;
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     public static void main(String[] args) {
@@ -74,6 +50,20 @@ public class InsertIntoBooks extends JDialog {
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    private String onOK() {
+        // add your code here
+        String toReturn = textField1.getText() + "," + textField2.getText() + "," +
+                textField3.getText() + "," + textField4.getText() + "," + textField5.getText() + "," + textField6.getText() + "," +
+                textField7.getText() + "," + textField8.getText() + "," + textField9.getText() + "," + textField10.getText();
+        dispose();
+        return toReturn;
+    }
+
+    private void onCancel() {
+        // add your code here if necessary
+        dispose();
     }
 
 }

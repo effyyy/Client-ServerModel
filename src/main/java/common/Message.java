@@ -8,6 +8,12 @@ public class Message implements Serializable {
     Database database;
     String argument;
 
+    public Message(Command command, Database database, String argument) {
+        this.command = command;
+        this.database = database;
+        this.argument = argument;
+    }
+
     public String getArgument() {
         return argument;
     }
@@ -15,7 +21,6 @@ public class Message implements Serializable {
     public void setArgument(String argument) {
         this.argument = argument;
     }
-
 
     public Command getCommand() {
         return command;
@@ -36,15 +41,8 @@ public class Message implements Serializable {
         this.database = database;
     }
 
-
-
-    public Message(Command command, Database database,String argument){
-        this.command = command;
-        this.database = database;
-        this.argument = argument;
-    }
-    public String toString(){
-        return "Selected Command is " + command+
-                " Selected Database is "+ database + " Inserted Argument is : " + argument;
+    public String toString() {
+        return "Selected Command is " + command +
+                " Selected Database is " + database + " Inserted Argument is : " + argument;
     }
 }

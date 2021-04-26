@@ -1,10 +1,10 @@
 package client;
 
-import common.*;
+import common.Command;
+import common.Database;
+import common.Message;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
@@ -12,52 +12,27 @@ import java.util.ArrayList;
 
 public class ClientGUI extends JFrame {
 
-    private JButton connectButton;
-
-    public  JLabel displayLabel;
-
-    private JPanel guiPanel;
-
-    private JTable sqlTable;
-
-    private JScrollPane scroller;
-
-    private JList databaseSelect;
-
-    private JList selectFunctionality;
-
-    private JButton confirmSelect;
-
-    private JButton updateTableButton;
-
-    private JButton printTableButton;
-
-    private JButton clearTableButton;
-
-    private JButton plotTableButton;
-
-    private JButton sendToServerButton;
-
-    private Message toSend;
-
     public static String argument;
+    public JLabel displayLabel;
 
+    public JPanel guiPanel;
     public Database database;
-
+    Client client = new Client();
+    private JButton connectButton;
+    private JTable sqlTable;
+    private JList databaseSelect;
+    private JList selectFunctionality;
+    private JButton confirmSelect;
+    private JButton printTableButton;
+    private JButton clearTableButton;
+    private JButton sendToServerButton;
+    private Message toSend;
     private Command command;
 
-    private ArrayList<?> toPlot;
-
-    private static String testString;
-
-
-
-    Client client = new Client();
-
-    ClientGUI() {
+    public ClientGUI() {
         this.setContentPane(guiPanel);
 
-        this.setSize(1440,600);
+        this.setSize(1440, 600);
 
         this.setVisible(true);
 
@@ -79,12 +54,9 @@ public class ClientGUI extends JFrame {
             }
         });
 
-        displayLabel.setText(testString);
-
 
         connectButton.addActionListener(evt ->
                 setDisplayLabel(client.reconnectToServer()));
-
 
 
         confirmSelect.addActionListener(evt -> {
@@ -93,7 +65,7 @@ public class ClientGUI extends JFrame {
             database = getDatabase(databaseSelect.getSelectedIndex());
 
             //Selecting Command from JLIST
-            command = getCommand(selectFunctionality.getSelectedIndex(),database);
+            command = getCommand(selectFunctionality.getSelectedIndex());
 
             getArgument();
 
@@ -103,76 +75,36 @@ public class ClientGUI extends JFrame {
         });
 
 
-        updateTableButton.addActionListener(e -> {
-
-            setDisplayLabel(String.valueOf(sqlTable.getSelectedColumn()));
-
+        sendToServerButton.addActionListener(e -> {
+            toSend = new Message(command, database, argument);
+            setDisplayLabel(client.sendToServer(toSend));
+            ClientGUI.argument = null;
+            plotGraph();
         });
-
-        plotTableButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if(command == Command.INSERT_INTO || command == Command.DELETE){
-
-                    Message message =  new Message(Command.SELECT_ALL,database,null);
-
-                    client.sendToServer(message);
-
-                    client.readFromServer();
-
-                    toPlot = client.toPlot;
-
-                    plotGraph();
-
-                    System.out.println(client.toPlot);
-
-
+        printTableButton.addActionListener(e -> {
+            try {
+                boolean complete = sqlTable.print();
+                if (complete) {
+                    setDisplayLabel("Table Print Successful");
+                } else {
+                    setDisplayLabel("Table Printing cancelled");
                 }
-                client.readFromServer();
-
-                toPlot = client.toPlot;
-
-                plotGraph();
-
-            }
-        });
-        sendToServerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toSend = new Message(command, database, argument);
-                setDisplayLabel(client.sendToServer(toSend));
-                ClientGUI.argument = null;
-            }
-        });
-        printTableButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    boolean complete = sqlTable.print();
-                    if (complete) {
-                        setDisplayLabel("Table Print Successful");
-                    } else {
-                        setDisplayLabel("Table Printing cancelled");
-                    }
-                } catch (PrinterException pe) {
-                    setDisplayLabel("Failed to Print Table");
-                }
+            } catch (PrinterException pe) {
+                setDisplayLabel("Failed to Print Table");
             }
         });
     }
 
-    public void plotGraph(){
-            if (toPlot != null && database != null) {
-                GenericTableModel genericTableModel = new GenericTableModel(toPlot, database);
-                sqlTable.setModel(genericTableModel);
-            }
+    public static void main(String[] args) {
     }
 
-    public void plotEmptyGraph(Database database){
-        ArrayList<?> arrayList = new ArrayList<>();
-        GenericTableModel genericTableModel = new GenericTableModel(arrayList,database);
+    public void plotGraph() {
+
+        client.readFromServer();
+
+        ArrayList<?> toPlot = client.toPlot;
+
+        GenericTableModel genericTableModel = new GenericTableModel(toPlot, database);
         sqlTable.setModel(genericTableModel);
     }
 
@@ -185,60 +117,57 @@ public class ClientGUI extends JFrame {
         }
         if (input == 2) {
             return Database.ON_LOAN;
-        }
-        else{
+        } else {
             setDisplayLabel("Please Select an input");
             return null;
         }
     }
 
-    private Command getCommand(int input, Database database){
-        if(input == 0){
+    private Command getCommand(int input) {
+        if (input == 0) {
             return Command.SELECT_ALL;
         }
-        if(input == 1){
+        if (input == 1) {
             return Command.SELECT_WHERE;
         }
-        if(input == 2){
+        if (input == 2) {
             return Command.INSERT_INTO;
         }
-        if(input == 3){
+        if (input == 3) {
             return Command.UPDATE;
         }
-        if(input == 4){
+        if (input == 4) {
             return Command.DELETE;
-        }
-        else{
+        } else {
             return null;
         }
     }
 
-    public void getArgument(){
-        if(command == Command.SELECT_WHERE) {
-            SelectWhereDialog selectWhereDialog = new SelectWhereDialog(database);
+    public void getArgument() {
+        if (command == Command.SELECT_WHERE) {
+            new SelectWhereDialog(database);
         }
-        if(command == Command.INSERT_INTO){
-            if(database == Database.PERSON) {
-                InsertIntoPersons insertIntoPersons = new InsertIntoPersons();
+        if (command == Command.INSERT_INTO) {
+            if (database == Database.PERSON) {
+                new InsertIntoPersons();
             }
-            if(database == Database.BOOKS){
-                InsertIntoBooks insertIntoBooks = new InsertIntoBooks();
+            if (database == Database.BOOKS) {
+                new InsertIntoBooks();
             }
-            if(database==Database.ON_LOAN){
-                InsertIntoOnloan insertIntoOnloan = new InsertIntoOnloan();
+            if (database == Database.ON_LOAN) {
+                new InsertIntoOnloan();
             }
         }
-        if(command == Command.DELETE){
-            DeleteDialog deleteDialog = new DeleteDialog(database);
+        if (command == Command.DELETE) {
+            new DeleteDialog(database);
+        }
+        if (command == Command.UPDATE) {
+            new UpdateDatabase();
         }
     }
 
     public void setDisplayLabel(String say) {
-       displayLabel.setText(say);
-    }
-
-
-    public static void main(String[] args){
+        displayLabel.setText(say);
     }
 
 }

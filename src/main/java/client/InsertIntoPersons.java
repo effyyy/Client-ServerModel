@@ -1,13 +1,14 @@
 package client;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class InsertIntoPersons extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
@@ -20,18 +21,12 @@ public class InsertIntoPersons extends JDialog {
         setAlwaysOnTop(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(onOK());
-                ClientGUI.argument = onOK();
-            }
+        buttonOK.addActionListener(e -> {
+            System.out.println(onOK());
+            ClientGUI.argument = onOK();
         });
 
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+        buttonCancel.addActionListener(e -> onCancel());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -42,23 +37,8 @@ public class InsertIntoPersons extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-    private String onOK() {
-        // add your code here
-        String toReturn = textField2.getText()+","+textField3.getText()+","+textField4.getText();
-        dispose();
-        return toReturn;
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     public static void main(String[] args) {
@@ -66,5 +46,17 @@ public class InsertIntoPersons extends JDialog {
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    private String onOK() {
+        // add your code here
+        String toReturn = textField2.getText() + "," + textField3.getText() + "," + textField4.getText();
+        dispose();
+        return toReturn;
+    }
+
+    private void onCancel() {
+        // add your code here if necessary
+        dispose();
     }
 }

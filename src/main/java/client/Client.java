@@ -2,9 +2,11 @@ package client;
 
 import common.Message;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.io.*;
-import java.net.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,11 +23,11 @@ import java.util.logging.Logger;
 public class Client {
 
     private final Object waitObject = new Object();
-    private Socket socket;
     public Message toSend;
-    public ArrayList<?>toPlot;
+    public ArrayList<?> toPlot;
     ObjectInputStream objectInputStream;
     ObjectOutputStream objectOutputStream;
+    private Socket socket;
 
     /**
      * Constructor will just initialise the AWT Frame and GUI.
@@ -33,6 +35,13 @@ public class Client {
     public Client() {
 
         super();
+    }
+
+    public static void main(String[] args) {
+
+        Client client = new Client();
+        new ClientGUI();
+        client.reconnectToServer();
     }
 
     /**
@@ -58,6 +67,7 @@ public class Client {
         }
         return "Connection Closed";
     }
+
     /**
      * Setup connection to the server on the loop back address and the same port
      * number as the Server is expecting.
@@ -90,22 +100,23 @@ public class Client {
 
     public void readFromServer() {
 
-            clientSays("Waiting for message from server...");
-            try {
-                ArrayList<?> replyObject;
-                replyObject = (ArrayList<?>) objectInputStream.readObject();
-                toPlot = replyObject;
-            } catch (IOException | ClassNotFoundException ex) {
-                clientSays("IOException " + ex);
-            }
-
+        clientSays("Waiting for message from server...");
+        try {
+            ArrayList<?> replyObject;
+            replyObject = (ArrayList<?>) objectInputStream.readObject();
+            toPlot = replyObject;
+        } catch (IOException | ClassNotFoundException ex) {
+            clientSays("IOException " + ex);
         }
+
+    }
+
     //End of method
     public String sendToServer(Message toSend) {
         this.toSend = toSend;
-        try{
+        try {
 
-            if (this.socket!=null) {
+            if (this.socket != null) {
                 // send data to server
 
                 clientSays("Sending " + toSend + " to server.");
@@ -115,7 +126,7 @@ public class Client {
         } catch (IOException ex) {
             clientSays("IOException : " + ex);
         }
-        return "Sent to server :"+ toSend;
+        return "Sent to server :" + toSend;
     }
 
     /**
@@ -126,14 +137,6 @@ public class Client {
     public void clientSays(String say) {
         int clientNumber = 0;
         System.out.println("Client" + clientNumber + ": " + say);
-    }
-
-
-    public static void main(String[] args) {
-
-        Client client = new Client();
-        ClientGUI gui = new ClientGUI();
-        client.reconnectToServer();
     }
 
 }

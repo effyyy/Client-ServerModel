@@ -1,10 +1,14 @@
 package server;
 
-import common.*;
+import common.Command;
+import common.Database;
+import common.Message;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 
 /**
@@ -15,7 +19,7 @@ import java.net.*;
  * @author Chris Bass
  * 08/04/2016
  */
-public class ThreadedServer{
+public class ThreadedServer {
 
     private static final HashSet<ClientHandlerThread> CLIENT_HANDLER_THREADS = new HashSet<>();
     SQLite sql = new SQLite();
@@ -25,6 +29,16 @@ public class ThreadedServer{
      */
     public ThreadedServer() {
     }
+
+    public static void removeThread(ClientHandlerThread threadToRemove) {
+        CLIENT_HANDLER_THREADS.remove(threadToRemove);
+    }
+
+    public static void main(String[] args) {
+        ThreadedServer simpleServer = new ThreadedServer();
+        simpleServer.connectToClients();
+    }
+
     /**
      * Wait until a client connects to the server on a port, then establish the
      * connection via a socket object and create a thread to handle requests.
@@ -49,19 +63,8 @@ public class ThreadedServer{
                     System.out.println("Server: We have lost connection to client " + connectionCount + ".");
                 }
             }
-        }catch(IOException ex){
+        } catch (IOException ex) {
             System.out.println("IO Exception : " + ex);
-        }
-    }
-
-    public static void removeThread(ClientHandlerThread threadToRemove) {
-        CLIENT_HANDLER_THREADS.remove(threadToRemove);
-    }
-
-    public static void broadcastToClients() {
-
-        for (ClientHandlerThread handler : CLIENT_HANDLER_THREADS) {
-            handler.sendBroadcast();
         }
     }
 
@@ -72,59 +75,55 @@ public class ThreadedServer{
         if (message.getCommand() == null) {
             System.out.println("Null input");
         } else {
-                sqlStatement = getSQLStatement(message);
+            sqlStatement = getSQLStatement(message);
             System.out.println(sqlStatement);
 
-                if (message.getDatabase() == Database.BOOKS) {
-                    return sql.executeSQLCommandBooks(sqlStatement,message);
-                }
-                if (message.getDatabase() == Database.PERSON) {
-                    return sql.executeSQLCommandPerson(sqlStatement,message);
-                }
-                if (message.getDatabase() == Database.ON_LOAN) {
-                    return sql.executeSQLCommandOnLoan(sqlStatement,message);
-                }
+            if (message.getDatabase() == Database.BOOKS) {
+                return sql.executeSQLCommandBooks(sqlStatement, message);
             }
+            if (message.getDatabase() == Database.PERSON) {
+                return sql.executeSQLCommandPerson(sqlStatement, message);
+            }
+            if (message.getDatabase() == Database.ON_LOAN) {
+                return sql.executeSQLCommandOnLoan(sqlStatement, message);
+            }
+        }
         return null;
 
     }
 
-    public String getSQLStatement(Message message){
-        if(message.getCommand() == Command.SELECT_ALL){
-            return "SELECT * FROM "+ message.getDatabase();
+    public String getSQLStatement(Message message) {
+        if (message.getCommand() == Command.SELECT_ALL) {
+            return "SELECT * FROM " + message.getDatabase();
         }
-        if(message.getCommand()==Command.SELECT_WHERE){
-            return "SELECT * FROM "+ message.getDatabase() + " WHERE "+ message.getArgument();
+        if (message.getCommand() == Command.SELECT_WHERE) {
+            return "SELECT * FROM " + message.getDatabase() + " WHERE " + message.getArgument();
         }
-        if(message.getCommand() == Command.INSERT_INTO){
-            if(message.getDatabase() == Database.PERSON) {
+        if (message.getCommand() == Command.INSERT_INTO) {
+            if (message.getDatabase() == Database.PERSON) {
                 return "INSERT INTO " + message.getDatabase() + "(first_name,last_name,library_card) VALUES (?,?,?)";
             }
-            if(message.getDatabase()== Database.BOOKS){
-                return "INSERT INTO "+ message.getDatabase()+"(title,authors,average_rating,isbn,isbn13,language_code," +
+            if (message.getDatabase() == Database.BOOKS) {
+                return "INSERT INTO " + message.getDatabase() + "(title,authors,average_rating,isbn,isbn13,language_code," +
                         "[#num_pages],ratings_count,text_reviews_count,quantity) VALUES (?,?,?,?,?,?,?,?,?,?)";
             }
-            if(message.getDatabase()==Database.ON_LOAN){
-                return "INSERT INTO "+message.getDatabase()+"(person_id,book_id,loan_period,loan_start,loan_end," +
+            if (message.getDatabase() == Database.ON_LOAN) {
+                return "INSERT INTO " + message.getDatabase() + "(person_id,book_id,loan_period,loan_start,loan_end," +
                         "returned_date,return_status) VALUES (?,?,?,?,?,?,?)";
-            }
-            else{
+            } else {
                 return null;
             }
         }
 
-        if(message.getCommand() == Command.DELETE){
-            return "DELETE FROM "+ message.getDatabase() + " " + message.getArgument();
+        if (message.getCommand() == Command.DELETE) {
+            return "DELETE FROM " + message.getDatabase() + " " + message.getArgument();
         }
-        else{
+        if (message.getCommand() == Command.UPDATE) {
+            return "UPDATE " + message.getDatabase() + message.getArgument();
+        } else {
             return null;
         }
 
-    }
-
-    public static void main(String[] args) {
-        ThreadedServer simpleServer = new ThreadedServer();
-        simpleServer.connectToClients();
     }
 
 }

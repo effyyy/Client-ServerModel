@@ -1,15 +1,12 @@
 package server;
 
-import client.Client;
-import client.ClientGUI;
-import common.Command;
 import common.Message;
 
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,10 +21,10 @@ import java.util.logging.Logger;
  * @author Chris Bass
  * 08/04/2016
  */
-public class ClientHandlerThread implements Runnable{
+public class ClientHandlerThread implements Runnable {
 
-    private final Socket socket;
     private static int connectionCount = 0;
+    private final Socket socket;
     private final int connectionNumber;
     ObjectOutputStream objectOutputStream;
     ObjectInputStream objectInputStream;
@@ -38,7 +35,7 @@ public class ClientHandlerThread implements Runnable{
     /**
      * Constructor just initialises the connection to client.
      *
-     * @param socket       the socket to establish the connection to client.
+     * @param socket the socket to establish the connection to client.
      * @throws IOException if an I/O error occurs when creating the input and
      *                     output streams, or if the socket is closed, or socket is not connected.
      */
@@ -59,23 +56,21 @@ public class ClientHandlerThread implements Runnable{
      */
     @Override
     public void run() {
-        try
-        {
+        try {
             Message messageRead;
 
             ArrayList<?> objectList;
 
-            while ((messageRead = (Message)objectInputStream.readObject())!=null) {
+            while ((messageRead = (Message) objectInputStream.readObject()) != null) {
                 System.out.println("Object Read is :" + messageRead);
                 objectList = threadedServer.getData(messageRead);
-                System.out.println(objectList);
                 objectOutputStream.writeObject(objectList);
             }
 
-        }catch(IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             threadSays("Exception : " + ex);
 
-        }finally {
+        } finally {
 
             try {
                 threadSays("We have lost connection to client " + connectionNumber + ".");
@@ -90,7 +85,7 @@ public class ClientHandlerThread implements Runnable{
 
     }
 
- public void sendBroadcast() {
+    public void sendBroadcast() {
         threadSays("Broadcasting to client " + connectionNumber + ".");
     }
 

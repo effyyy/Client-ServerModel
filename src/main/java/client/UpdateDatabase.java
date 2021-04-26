@@ -5,22 +5,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class InsertIntoOnloan extends JDialog {
+public class UpdateDatabase extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField textField1;
     private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JTextField textField5;
-    private JTextField textField6;
-    private JTextField textField7;
 
-    public InsertIntoOnloan() {
+    public UpdateDatabase() {
+        setTitle("Update Database Dialog");
         setContentPane(contentPane);
-        setTitle("Insert into the ONLOAN database");
-        pack();
+        setSize(500, 300);
         setVisible(true);
         setAlwaysOnTop(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -43,7 +38,7 @@ public class InsertIntoOnloan extends JDialog {
     }
 
     public static void main(String[] args) {
-        InsertIntoOnloan dialog = new InsertIntoOnloan();
+        UpdateDatabase dialog = new UpdateDatabase();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
@@ -51,12 +46,9 @@ public class InsertIntoOnloan extends JDialog {
 
     private String onOK() {
         // add your code here
-        String toReturn = textField1.getText() + "," + textField2.getText() + "," +
-                textField3.getText() + "," + textField4.getText() + "," + textField5.getText() + "," + textField6.getText() + "," +
-                textField7.getText();
+        String toReturn = " SET " + textField1.getText() + " WHERE " + textField2.getText();
         dispose();
         return toReturn;
-
     }
 
     private void onCancel() {

@@ -10,7 +10,8 @@ public class GenericTableModel extends AbstractTableModel {
     Database database;
     ArrayList<?> arrayList;
     ArraylistHandler arraylistHandler;
-    public GenericTableModel(ArrayList<?> arrayList, Database database){
+
+    public GenericTableModel(ArrayList<?> arrayList, Database database) {
         this.database = database;
         this.arrayList = arrayList;
         this.arraylistHandler = new ArraylistHandler(database, arrayList);
@@ -29,7 +30,7 @@ public class GenericTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-       return arraylistHandler.getValueAt(rowIndex,columnIndex);
+        return arraylistHandler.getValueAt(rowIndex, columnIndex);
     }
 
     @Override
