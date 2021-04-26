@@ -65,7 +65,7 @@
           <model>
             <item value="Books"/>
             <item value="Person"/>
-            <item value="On_loan"/>
+            <item value="Loan "/>
           </model>
         </properties>
       </component>

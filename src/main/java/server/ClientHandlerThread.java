@@ -1,5 +1,7 @@
 package server;
 
+import client.Client;
+import client.ClientGUI;
 import common.Command;
 import common.Message;
 
@@ -27,6 +29,8 @@ public class ClientHandlerThread implements Runnable{
     private final Socket socket;
     private static int connectionCount = 0;
     private final int connectionNumber;
+    ObjectOutputStream objectOutputStream;
+    ObjectInputStream objectInputStream;
 
 
     ThreadedServer threadedServer = new ThreadedServer();
@@ -42,6 +46,8 @@ public class ClientHandlerThread implements Runnable{
         this.socket = socket;
         connectionCount++;
         connectionNumber = connectionCount;
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectInputStream = new ObjectInputStream(socket.getInputStream());
         threadSays("Connection " + connectionNumber + " established.");
     }
 
@@ -55,9 +61,6 @@ public class ClientHandlerThread implements Runnable{
     public void run() {
         try
         {
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-
             Message messageRead;
 
             ArrayList<?> objectList;
@@ -65,10 +68,8 @@ public class ClientHandlerThread implements Runnable{
             while ((messageRead = (Message)objectInputStream.readObject())!=null) {
                 System.out.println("Object Read is :" + messageRead);
                 objectList = threadedServer.getData(messageRead);
-                for (Object o: objectList) {
-                    objectOutputStream.writeObject(objectList);
-                }
-
+                System.out.println(objectList);
+                objectOutputStream.writeObject(objectList);
             }
 
         }catch(IOException | ClassNotFoundException ex){

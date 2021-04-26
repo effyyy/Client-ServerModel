@@ -24,6 +24,8 @@ public class Client {
     private Socket socket;
     public Message toSend;
     public ArrayList<?>toPlot;
+    ObjectInputStream objectInputStream;
+    ObjectOutputStream objectOutputStream;
 
     /**
      * Constructor will just initialise the AWT Frame and GUI.
@@ -65,6 +67,8 @@ public class Client {
         clientSays("Attempting connection to server");
         try {
             socket = new Socket("127.0.0.1", 2000);
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
             clientSays("Connected to server");
             return "Connected To Server";
         } catch (IOException ex) {
@@ -84,28 +88,26 @@ public class Client {
      */
 
 
-    public String readFromServer() {
+    public void readFromServer() {
 
             clientSays("Waiting for message from server...");
             try {
-                ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                 ArrayList<?> replyObject;
                 replyObject = (ArrayList<?>) objectInputStream.readObject();
                 toPlot = replyObject;
-                objectInputStream.reset();
             } catch (IOException | ClassNotFoundException ex) {
                 clientSays("IOException " + ex);
             }
-            return "Read From Server Complete";
 
         }
     //End of method
     public String sendToServer(Message toSend) {
         this.toSend = toSend;
         try{
+
             if (this.socket!=null) {
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
                 // send data to server
+
                 clientSays("Sending " + toSend + " to server.");
                 objectOutputStream.writeObject(toSend);
                 objectOutputStream.reset();
@@ -131,6 +133,7 @@ public class Client {
 
         Client client = new Client();
         ClientGUI gui = new ClientGUI();
+        client.reconnectToServer();
     }
 
 }

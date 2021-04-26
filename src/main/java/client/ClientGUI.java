@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 
 public class ClientGUI extends JFrame {
@@ -96,7 +97,6 @@ public class ClientGUI extends JFrame {
 
             getArgument();
 
-            setDisplayLabel("You have selected the Database :"+database+", Command :" + command +" Argument:"+ argument);
 
             //Check if we are clear for sending the selected Message object to the Server
 
@@ -104,6 +104,8 @@ public class ClientGUI extends JFrame {
 
 
         updateTableButton.addActionListener(e -> {
+
+            setDisplayLabel(String.valueOf(sqlTable.getSelectedColumn()));
 
         });
 
@@ -118,8 +120,17 @@ public class ClientGUI extends JFrame {
 
                     client.sendToServer(message);
 
+                    client.readFromServer();
+
+                    toPlot = client.toPlot;
+
+                    plotGraph();
+
+                    System.out.println(client.toPlot);
+
+
                 }
-                setDisplayLabel(client.readFromServer());
+                client.readFromServer();
 
                 toPlot = client.toPlot;
 
@@ -133,6 +144,21 @@ public class ClientGUI extends JFrame {
                 toSend = new Message(command, database, argument);
                 setDisplayLabel(client.sendToServer(toSend));
                 ClientGUI.argument = null;
+            }
+        });
+        printTableButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    boolean complete = sqlTable.print();
+                    if (complete) {
+                        setDisplayLabel("Table Print Successful");
+                    } else {
+                        setDisplayLabel("Table Printing cancelled");
+                    }
+                } catch (PrinterException pe) {
+                    setDisplayLabel("Failed to Print Table");
+                }
             }
         });
     }
