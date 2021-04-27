@@ -13,6 +13,10 @@ public class InsertIntoPersons extends JDialog {
     private JTextField textField3;
     private JTextField textField4;
 
+
+    /**
+     * Creates a Dialog for the input of argument for the Insert Function for the Person Database
+     */
     public InsertIntoPersons() {
         setTitle("INSERT INTO Dialog Box");
         setContentPane(contentPane);

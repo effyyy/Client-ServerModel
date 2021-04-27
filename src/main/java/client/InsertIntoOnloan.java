@@ -17,6 +17,10 @@ public class InsertIntoOnloan extends JDialog {
     private JTextField textField6;
     private JTextField textField7;
 
+
+    /**
+     * Creates a Dialog for the input of argument for the Insert Function for the On_loan Database
+     */
     public InsertIntoOnloan() {
         setContentPane(contentPane);
         setTitle("Insert into the ONLOAN database");

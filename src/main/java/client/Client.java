@@ -11,14 +11,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A simple client with a single window frame. Sends a username as a String to
- * server and receives email address String as reply.
+ * A simple client with a single window frame (This is delegated to another class the ClientGUI).
+ * Sends a Message Object to server and receives Arraylist of database objects as reply.
  * <p>
  * The reply is read in the main thread while the sending is done in the action
  * listener thread.
  *
- * @author Chris Bass
- * 08/04/2016
+ * @author Umair Afzal
+ *
  */
 public class Client {
 
@@ -60,9 +60,11 @@ public class Client {
         return "Connection Closed";
     }
 
+
     /**
      * Setup connection to the server on the loop back address and the same port
      * number as the Server is expecting.
+     * @return String, This string signifies if the connection was successful or failed
      */
     public String reconnectToServer() {
         closeConnection();
@@ -86,7 +88,7 @@ public class Client {
     }
 
     /**
-     * Keep reading for messages from the server and updating the GUI.
+     * Read for messages(In our case Arraylists) from the server and sets it as a class variable.
      */
 
 
@@ -106,14 +108,16 @@ public class Client {
 
     }
 
-    //End of method
+    /**
+     * Sends a message object to the server via an ObjectOutputStream
+     * @param toSend Takes a Message Object as a parameter
+     * @return  Returns a String which confirms what exactly was sent to the server
+     */
     public String sendToServer(Message toSend) {
         this.toSend = toSend;
         try {
 
             if (this.socket != null) {
-                // send data to server
-
                 clientSays("Sending " + toSend + " to server.");
                 objectOutputStream.writeObject(toSend);
                 objectOutputStream.reset();
@@ -136,8 +140,8 @@ public class Client {
 
     public static void main(String[] args) {
 
-        Client client = new Client();
-        ClientGUI gui = new ClientGUI();
+       new Client();
+       new ClientGUI();
     }
 
 

@@ -14,6 +14,12 @@ import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
 import java.util.*;
 
+/**
+ * This class is responsible for creating the GUI for our App, this class takes care of how the user interacts with
+ * the client and the database. The input of data in a restricted format to prevent the user from begin able to enter
+ * SQL statements. On this flip side, it provides a relatively simple functionality without having to write complex SQL
+ * statements.
+ */
 public class ClientGUI extends JFrame {
 
     public static String argument;
@@ -34,6 +40,11 @@ public class ClientGUI extends JFrame {
     private Command command;
     GenericTableModel genericTableModel;
 
+    /**
+     * Constructor for the ClientGUI,
+     * Sets the specifics for our GUI such as Visibility and Titles etc.., it also is home to all the action listeners
+     * for the buttons we have in the GUI.
+     */
     public ClientGUI() {
         this.setContentPane(guiPanel);
 
@@ -64,8 +75,9 @@ public class ClientGUI extends JFrame {
         });
 
         connectButton.addActionListener(evt ->
+                //Executes the send to server command and returns what is
+                // sent to the server
                 setDisplayLabel(client.reconnectToServer()));
-
 
         confirmSelect.addActionListener(evt -> {
 
@@ -84,42 +96,66 @@ public class ClientGUI extends JFrame {
 
 
         sendToServerButton.addActionListener(e -> {
-            toSend = new Message(command, database, argument);
-            setDisplayLabel(client.sendToServer(toSend));
-            ClientGUI.argument = null;
-            plotGraph();
+            toSend = new Message(command, database, argument);  //Creating a Message object using the selected databse and command
+
+            setDisplayLabel(client.sendToServer(toSend));//Sending to server and output the result to status bar
+
+            ClientGUI.argument = null; //reset the 'argument' field
+
+            plotGraph();//Plots the graph for while reading the server
+
         });
         printTableButton.addActionListener(e -> {
+
+            //Prints the currently displayed table. (Opens a print window for specifics)
             try {
                 boolean complete = sqlTable.print();
+
                 if (complete) {
+
                     setDisplayLabel("Table Print Successful");
+
                 } else {
+
                     setDisplayLabel("Table Printing cancelled");
+
                 }
             } catch (PrinterException pe) {
+
                 setDisplayLabel("Failed to Print Table");
+
             }
         });
-        clearTableButton.addActionListener(e -> {
-            DefaultTableModel emptyModel = new DefaultTableModel();
-            emptyModel.setRowCount(0);
-            sqlTable.setModel(emptyModel);
-        });
-    }
 
-    public static void main(String[] args) {
+        clearTableButton.addActionListener(e -> {
+
+            //creates an empty tale model and sets it as the sqlTable's table model
+            DefaultTableModel emptyModel = new DefaultTableModel();
+
+            emptyModel.setRowCount(0);
+
+            sqlTable.setModel(emptyModel);
+
+        });
     }
 
     public void plotGraph() {
 
         client.readFromServer();
+
         ArrayList<?> toPlot = client.toPlot;
+
         genericTableModel = new GenericTableModel(toPlot, database);
+
         sqlTable.setModel(genericTableModel);
+
     }
 
 
+    /**
+     * @param input Input is the J-list entry (databaseSelect) index which is currently selected.
+     * @return
+     */
     private Database getDatabase(int input) {
         if (input == 0) {
             return Database.BOOKS;
@@ -135,6 +171,10 @@ public class ClientGUI extends JFrame {
         }
     }
 
+    /**
+     * @param input Input is the J-list entry index(selectFunctionality) which is currently selected.
+     * @return  returns the command according to the J-List entry currently selected
+     */
     private Command getCommand(int input) {
         if (input == 0) {
             return Command.SELECT_ALL;
@@ -162,6 +202,10 @@ public class ClientGUI extends JFrame {
         }
     }
 
+    /**
+     * This function sets the 'argument' for the message object, this functions uses different methods to obtain the
+     * argument depending on the command and database selected.
+     */
     public void getArgument() {
 
         ArraylistHandler arraylistHandler = new ArraylistHandler(database,null);
@@ -197,6 +241,9 @@ public class ClientGUI extends JFrame {
         }
     }
 
+    /**
+     * @param say The input string which is then printed onto the Status Bar
+     */
     public void setDisplayLabel(String say) {
         displayLabel.setText(say);
     }

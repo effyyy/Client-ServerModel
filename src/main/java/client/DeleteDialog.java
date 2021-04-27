@@ -15,6 +15,10 @@ public class DeleteDialog extends JDialog {
     private JTextField toDeleteField;
     private JComboBox <String>operationDropDown;
 
+    /**
+     *  Creates a Dialog for the input of argument for the DELETE Function based on the database selected
+     * @param database the selected database, this decides what column names we input as options
+     */
     public DeleteDialog(Database database) {
         setTitle("Delete Dialog");
         ArraylistHandler handler = new ArraylistHandler(database, null);
@@ -49,8 +53,9 @@ public class DeleteDialog extends JDialog {
     }
 
     private String onOK() {
-        // add your code here
-        String toReturn = "WHERE " + dropDownMenu.getSelectedItem() + operationDropDown.getSelectedItem() + toDeleteField.getText();
+        // creates an argument based on the input from the user
+        String toReturn = "WHERE " + dropDownMenu.getSelectedItem() + operationDropDown.getSelectedItem() +
+                toDeleteField.getText();
         dispose();
         return toReturn;
     }

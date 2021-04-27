@@ -6,11 +6,19 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 
+/**
+ * A Generic class for plotting graphs for databases, this class depends on the ArraylistHandler to split the data
+ * according to different databases. This saves us the need to create multiple TableModels for each database.
+ */
 public class GenericTableModel extends AbstractTableModel {
     Database database;
     ArrayList<?> arrayList;
     ArraylistHandler arraylistHandler;
 
+    /**
+     * @param arrayList Arraylist of Row objects which form up the database
+     * @param database  The selected Database which decides the column names and length
+     */
     public GenericTableModel(ArrayList<?> arrayList, Database database) {
         this.database = database;
         this.arrayList = arrayList;

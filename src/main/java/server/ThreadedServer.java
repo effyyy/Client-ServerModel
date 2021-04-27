@@ -68,6 +68,13 @@ public class ThreadedServer {
         }
     }
 
+    /**
+     * This class takes a message object and passes it into the sqlStatementCreator, this returns a SQL executable
+     * Statement which is then executed using the SQLite class, this function then returns any resulting database objects
+     * as an arraylist to be sent to the server.
+     * @param message Takes a message object as an input
+     * @return
+     */
     public ArrayList<?> getData(Message message) {
 
         String sqlStatement;
@@ -75,8 +82,8 @@ public class ThreadedServer {
         if (message.getCommand() == null) {
             System.out.println("Null input");
         } else {
-            sqlStatement = getSQLStatement(message);
-            System.out.println(sqlStatement);
+            sqlStatement = sqlStatementCreator(message);
+            System.out.println("Created SQL Statement is : "+sqlStatement);
 
             if (message.getDatabase() == Database.BOOKS) {
                 return sql.executeSQLCommandBooks(sqlStatement, message);
@@ -92,7 +99,13 @@ public class ThreadedServer {
 
     }
 
-    public String getSQLStatement(Message message) {
+    /**
+     * Takes a Message object and creates a SQL statement out of it using the command,database and argument present in
+     * the Message object.
+     * @param message Message object as input
+     * @return Returns an executable SQL statement
+     */
+    public String sqlStatementCreator(Message message) {
 
         if (message.getCommand() == Command.SELECT_ALL) {
             return "SELECT * FROM " + message.getDatabase();

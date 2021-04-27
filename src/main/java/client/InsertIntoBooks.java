@@ -20,6 +20,9 @@ public class InsertIntoBooks extends JDialog {
     private JTextField textField9;
     private JTextField textField10;
 
+    /**
+     * Creates a Dialog for the input of argument for the Insert Function for the Books Database
+     */
     public InsertIntoBooks() {
         setTitle("Insert INTO the Books Database");
         setContentPane(contentPane);
@@ -53,7 +56,7 @@ public class InsertIntoBooks extends JDialog {
     }
 
     private String onOK() {
-        // add your code here
+        // converts user input into a SQL readable argument
         String toReturn = textField1.getText() + "," + textField2.getText() + "," +
                 textField3.getText() + "," + textField4.getText() + "," + textField5.getText() + "," + textField6.getText() + "," +
                 textField7.getText() + "," + textField8.getText() + "," + textField9.getText() + "," + textField10.getText();

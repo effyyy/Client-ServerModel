@@ -15,13 +15,9 @@ import java.util.logging.Logger;
  * Demonstrates how to make a connection to the SQLite database and then just
  * outputs the data to the console.
  *
- * @author Chris Bass
+ * @author Umair Afzal
  */
 public class SQLite {
-
-    public static void main(String[] args) {
-
-    }
 
     /**
      * This will execute any query related to the database 'Publication' in SQLite.

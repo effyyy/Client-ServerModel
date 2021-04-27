@@ -15,7 +15,10 @@ public class SelectWhereDialog extends JDialog {
     private JComboBox operationDropDown;
     private JTextField textField1;
 
-
+    /**
+     * Creates a Dialog for the input of argument for the SELECT/WHERE Function for the selected database
+     * @param database Takes the selected database an an input parameter
+     */
     public SelectWhereDialog(Database database) {
         //Getting Column Names for the ComboBox
         ArraylistHandler handler = new ArraylistHandler(database, null);

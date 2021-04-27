@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Creates an object for the on_loan database
+ */
 public class OnLoan implements Serializable {
 
     private final int loan_id;
@@ -15,6 +18,18 @@ public class OnLoan implements Serializable {
     private final String returned_date;
     private final String return_status;
 
+    /**
+     * This is the constructor for the on_loan class, parameters are the columns in the database and each input parameter
+     * defines the value for that particular column in the database.
+     * @param loan_id
+     * @param book_id
+     * @param person_id
+     * @param loan_period
+     * @param loan_start
+     * @param loan_end
+     * @param returned_date
+     * @param return_status
+     */
     public OnLoan(int loan_id, int book_id, int person_id, int loan_period, String loan_start, String loan_end, String returned_date, String return_status) {
         this.loan_id = loan_id;
         this.book_id = book_id;

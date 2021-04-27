@@ -85,9 +85,6 @@ public class ClientHandlerThread implements Runnable {
 
     }
 
-    public void sendBroadcast() {
-        threadSays("Broadcasting to client " + connectionNumber + ".");
-    }
 
     /**
      * Private helper method outputs to standard output stream for debugging.

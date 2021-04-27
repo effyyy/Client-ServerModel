@@ -12,6 +12,10 @@ public class UpdateDatabase extends JDialog {
     private JTextField textField1;
     private JTextField textField2;
 
+
+    /**
+     * Creates a Dialog for the input of argument for the UPDATE Function for the selected database
+     */
     public UpdateDatabase() {
         setTitle("Update Database Dialog");
         setContentPane(contentPane);
@@ -45,7 +49,6 @@ public class UpdateDatabase extends JDialog {
     }
 
     private String onOK() {
-        // add your code here
         String toReturn = " SET " + textField1.getText() + " WHERE " + textField2.getText();
         dispose();
         return toReturn;
