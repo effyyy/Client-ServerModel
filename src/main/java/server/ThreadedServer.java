@@ -50,7 +50,7 @@ public class ThreadedServer {
         try (ServerSocket serverSocket = new ServerSocket(2000)) {
             int connectionCount = 0;
 
-            while (true) {
+            while (true){
                 System.out.println("Server: Waiting for connecting client...");
                 try {
                     Socket socket = serverSocket.accept();
@@ -74,7 +74,7 @@ public class ThreadedServer {
      * Statement which is then executed using the SQLite class, this function then returns any resulting database objects
      * as an arraylist to be sent to the server.
      * @param message Takes a message object as an input
-     * @return
+     * @return Returns ArrayList of Database Objects
      */
     public ArrayList<?> getData(Message message) {
 
