@@ -1,3 +1,7 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
+
 package client;
 
 import common.Command;
@@ -5,10 +9,7 @@ import common.Database;
 import common.Message;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.print.PrinterException;
@@ -154,7 +155,7 @@ public class ClientGUI extends JFrame {
 
     /**
      * @param input Input is the J-list entry (databaseSelect) index which is currently selected.
-     * @return
+     * @return Returns the database enum selected
      */
     private Database getDatabase(int input) {
         if (input == 0) {

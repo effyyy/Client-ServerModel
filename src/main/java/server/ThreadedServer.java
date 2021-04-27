@@ -1,3 +1,6 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
 package server;
 
 import common.Command;
@@ -16,8 +19,6 @@ import java.util.HashSet;
  * multi-threading. This class has the responsibility for connecting new clients
  * and starting a new thread for each new client.
  *
- * @author Chris Bass
- * 08/04/2016
  */
 public class ThreadedServer {
 
@@ -155,9 +156,6 @@ public class ThreadedServer {
             return "UPDATE " + message.getDatabase() + message.getArgument();
         }
 
-        if(message.getCommand() == Command.CREATE_DB){
-            return "CREATE DATABASE "+ message.getArgument();
-        }
 
         else {
             return null;

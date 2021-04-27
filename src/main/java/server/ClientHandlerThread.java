@@ -1,3 +1,6 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
 package server;
 
 import common.Message;
@@ -18,8 +21,6 @@ import java.util.logging.Logger;
  * The other way is to implement the Runnable interface. Implementing Runnable
  * is better because we do not have to waste our inheritance option.
  *
- * @author Chris Bass
- * 08/04/2016
  */
 public class ClientHandlerThread implements Runnable {
 

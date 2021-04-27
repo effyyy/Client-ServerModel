@@ -1,3 +1,6 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
 package common;
 
 import java.io.Serializable;
@@ -17,10 +20,6 @@ public class Person implements Serializable {
     /**
      * This is the constructor for the person class, parameters are the columns in the database and each input parameter
      * defines the value for that particular column in the database.
-     * @param person_id
-     * @param first_name
-     * @param last_name
-     * @param library_card
      */
     public Person(int person_id, String first_name, String last_name, long library_card) {
         this.person_id = person_id;

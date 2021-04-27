@@ -1,3 +1,6 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
 package common;
 
 public enum Command {
@@ -8,5 +11,4 @@ public enum Command {
     UPDATE,
     SORT_ASC,
     SORT_DESC,
-    CREATE_DB
 }

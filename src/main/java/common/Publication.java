@@ -1,3 +1,6 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
 package common;
 
 import java.io.Serializable;
@@ -24,17 +27,6 @@ public class Publication implements Serializable {
     /**
      * This is the constructor for the publication class, parameters are the columns in the database and each input parameter
      * defines the value for that particular column in the database.
-     * @param book_id
-     * @param title
-     * @param authors
-     * @param average_rating
-     * @param isbn
-     * @param isbn13
-     * @param language_code
-     * @param num_pages
-     * @param ratings_count
-     * @param text_ratings_count
-     * @param quantity
      */
     public Publication(int book_id, String title, String authors, double average_rating, long isbn, long isbn13, String language_code, int num_pages, double ratings_count, double text_ratings_count, int quantity) {
         this.book_id = book_id;

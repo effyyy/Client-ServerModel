@@ -1,3 +1,6 @@
+//Name :- Umair Afzal
+//SID :- 8975414
+
 package common;
 
 import java.io.Serializable;
@@ -18,17 +21,9 @@ public class Message implements Serializable {
         return argument;
     }
 
-    public void setArgument(String argument) {
-        this.argument = argument;
-    }
 
     public Command getCommand() {
         return command;
-    }
-
-    public void setCommand(Command command) {
-
-        this.command = command;
     }
 
     public Database getDatabase() {
