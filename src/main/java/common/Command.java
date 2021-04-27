@@ -5,5 +5,8 @@ public enum Command {
     SELECT_WHERE,
     INSERT_INTO,
     DELETE,
-    UPDATE
+    UPDATE,
+    SORT_ASC,
+    SORT_DESC,
+    CREATE_DB
 }

@@ -93,12 +93,17 @@ public class ThreadedServer {
     }
 
     public String getSQLStatement(Message message) {
+
         if (message.getCommand() == Command.SELECT_ALL) {
             return "SELECT * FROM " + message.getDatabase();
         }
+
+
         if (message.getCommand() == Command.SELECT_WHERE) {
             return "SELECT * FROM " + message.getDatabase() + " WHERE " + message.getArgument();
         }
+
+
         if (message.getCommand() == Command.INSERT_INTO) {
             if (message.getDatabase() == Database.PERSON) {
                 return "INSERT INTO " + message.getDatabase() + "(first_name,last_name,library_card) VALUES (?,?,?)";
@@ -110,17 +115,38 @@ public class ThreadedServer {
             if (message.getDatabase() == Database.ON_LOAN) {
                 return "INSERT INTO " + message.getDatabase() + "(person_id,book_id,loan_period,loan_start,loan_end," +
                         "returned_date,return_status) VALUES (?,?,?,?,?,?,?)";
-            } else {
+            }
+
+            else {
                 return null;
             }
         }
 
+
+        if(message.getCommand() == Command.SORT_ASC){
+            return "SELECT * FROM " + message.getDatabase() + " ORDER BY "+ message.getArgument()+" ASC";
+        }
+
+
+        if(message.getCommand() == Command.SORT_DESC){
+            return "SELECT * FROM " + message.getDatabase() + " ORDER BY "+ message.getArgument()+" DESC";
+        }
+
+
         if (message.getCommand() == Command.DELETE) {
             return "DELETE FROM " + message.getDatabase() + " " + message.getArgument();
         }
+
+
         if (message.getCommand() == Command.UPDATE) {
             return "UPDATE " + message.getDatabase() + message.getArgument();
-        } else {
+        }
+
+        if(message.getCommand() == Command.CREATE_DB){
+            return "CREATE DATABASE "+ message.getArgument();
+        }
+
+        else {
             return null;
         }
 

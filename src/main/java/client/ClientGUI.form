@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="client.ClientGUI">
-  <grid id="27dc6" binding="guiPanel" layout-manager="GridLayoutManager" row-count="13" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="guiPanel" layout-manager="GridLayoutManager" row-count="14" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
+      <xy x="20" y="20" width="500" height="528"/>
     </constraints>
     <properties>
       <background color="-14560000"/>
@@ -23,12 +23,12 @@
       </component>
       <scrollpane id="90642">
         <constraints>
-          <grid row="3" column="1" row-span="9" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="1" row-span="11" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
         <children>
-          <scrollpane id="24fb7" binding="scroller">
+          <scrollpane id="24fb7">
             <constraints/>
             <properties/>
             <border type="none"/>
@@ -52,14 +52,14 @@
           <foreground color="-15877376"/>
           <model>
             <item value="Books"/>
-            <item value="Person"/>
+            <item value="Persons"/>
             <item value="Loan"/>
           </model>
         </properties>
       </component>
       <component id="2da14" class="javax.swing.JList" binding="selectFunctionality">
         <constraints>
-          <grid row="7" column="0" row-span="4" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
@@ -72,17 +72,9 @@
             <item value="INSERT"/>
             <item value="UPDATE"/>
             <item value="DELETE"/>
+            <item value="SORT ASCENDING"/>
+            <item value="SORT DESCENDING"/>
           </model>
-        </properties>
-      </component>
-      <component id="cdf6e" class="javax.swing.JButton" binding="confirmSelect">
-        <constraints>
-          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <background color="-16777216"/>
-          <foreground color="-1"/>
-          <text value="Confirm Selection"/>
         </properties>
       </component>
       <component id="19bbb" class="javax.swing.JLabel">
@@ -93,14 +85,6 @@
         </constraints>
         <properties>
           <text value="Please Select Database"/>
-        </properties>
-      </component>
-      <component id="2410c" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Please Select Functionality"/>
         </properties>
       </component>
       <component id="e8053" class="javax.swing.JLabel">
@@ -118,17 +102,39 @@
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
-      <component id="44f6f" class="javax.swing.JLabel">
+      <component id="2410c" class="javax.swing.JLabel">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Table Options"/>
+          <text value="Please Select Functionality"/>
+        </properties>
+      </component>
+      <component id="8754f" class="javax.swing.JLabel" binding="displayLabel">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16777216"/>
+          <foreground color="-1"/>
+          <horizontalAlignment value="0"/>
+          <horizontalTextPosition value="0"/>
+          <text value="Status"/>
+        </properties>
+      </component>
+      <component id="cdf6e" class="javax.swing.JButton" binding="confirmSelect">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16777216"/>
+          <foreground color="-1"/>
+          <text value="Confirm Selection"/>
         </properties>
       </component>
       <component id="9baad" class="javax.swing.JButton" binding="sendToServerButton" default-binding="true">
         <constraints>
-          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-16777216"/>
@@ -136,9 +142,17 @@
           <text value="Send To Server"/>
         </properties>
       </component>
+      <component id="44f6f" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Table Options"/>
+        </properties>
+      </component>
       <component id="d1417" class="javax.swing.JButton" binding="printTableButton" default-binding="true">
         <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-16777216"/>
@@ -148,24 +162,12 @@
       </component>
       <component id="26c96" class="javax.swing.JButton" binding="clearTableButton" default-binding="true">
         <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-16777216"/>
           <foreground color="-1"/>
           <text value="Clear Table"/>
-        </properties>
-      </component>
-      <component id="8754f" class="javax.swing.JLabel" binding="displayLabel">
-        <constraints>
-          <grid row="12" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <background color="-16777216"/>
-          <foreground color="-1"/>
-          <horizontalAlignment value="0"/>
-          <horizontalTextPosition value="0"/>
-          <text value="Status"/>
         </properties>
       </component>
     </children>

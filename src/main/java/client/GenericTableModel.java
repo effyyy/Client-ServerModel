@@ -23,6 +23,7 @@ public class GenericTableModel extends AbstractTableModel {
         return arraylistHandler.getArraySize();
     }
 
+
     @Override
     public int getColumnCount() {
         return arraylistHandler.getColumnLength();

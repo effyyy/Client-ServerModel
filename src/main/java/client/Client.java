@@ -36,14 +36,6 @@ public class Client {
 
         super();
     }
-
-    public static void main(String[] args) {
-
-        Client client = new Client();
-        new ClientGUI();
-        client.reconnectToServer();
-    }
-
     /**
      * Close the connection to server.
      */
@@ -99,14 +91,17 @@ public class Client {
 
 
     public void readFromServer() {
-
-        clientSays("Waiting for message from server...");
-        try {
-            ArrayList<?> replyObject;
-            replyObject = (ArrayList<?>) objectInputStream.readObject();
-            toPlot = replyObject;
-        } catch (IOException | ClassNotFoundException ex) {
-            clientSays("IOException " + ex);
+        if(objectInputStream!=null){
+            clientSays("Waiting for message from server...");
+            try {
+                ArrayList<?> replyObject;
+                replyObject = (ArrayList<?>) objectInputStream.readObject();
+                toPlot = replyObject;
+            } catch (IOException | ClassNotFoundException ex) {
+                clientSays("IOException " + ex);
+            }
+        }else{
+            clientSays("Please Connect to Server");
         }
 
     }
@@ -138,5 +133,12 @@ public class Client {
         int clientNumber = 0;
         System.out.println("Client" + clientNumber + ": " + say);
     }
+
+    public static void main(String[] args) {
+
+        Client client = new Client();
+        ClientGUI gui = new ClientGUI();
+    }
+
 
 }

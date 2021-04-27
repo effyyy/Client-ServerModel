@@ -13,7 +13,7 @@ public class DeleteDialog extends JDialog {
     private JButton buttonCancel;
     private JComboBox<String> dropDownMenu;
     private JTextField toDeleteField;
-    private JComboBox operationDropDown;
+    private JComboBox <String>operationDropDown;
 
     public DeleteDialog(Database database) {
         setTitle("Delete Dialog");
